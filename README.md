@@ -1,5 +1,5 @@
 # ytmarker-code
-The code for my website YTMarker.com(https://www.ytmarker.com)
+The code for my website [YTMarker.com](https://www.ytmarker.com)
 
 YTMarker.com is designed to be an easy way to mark youtube videos while watching, so you can replay the highlights to others.
 
