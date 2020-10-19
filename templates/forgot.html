@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    - Forgot Password
+{% endblock %}
+
+{% block main %}
+<div class="mx-auto d-flex-column justify-content-center p-3">
+    <header class="register-back my-auto mx-auto pt-10">
+        <a class="btn btn-secondary" href="/">Back</a>
+    </header>
+
+    </br>
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-dark">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    <div class="register-container my-auto mx-auto p-3">
+        <form action="/forgot" method="post">
+            <div class="form-group">
+                <input autocomplete="off" autofocus class="form-control" id="forgot-password" name="email" placeholder="Email" type="email">
+            </div>
+
+            <button class="btn btn-secondary video-input" type="submit">Send email</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+.time-animation-0::before {
+  box-shadow: inset 0px 0px 0px 0px #177831;
+}
+.time-animation-1::before {
+  box-shadow: inset 0px 0px 8px 1px #177831;
+}
+.time-animation-2::before {
+  box-shadow: inset 0px 0px 8px 2px #177831;
+}
+.time-animation-3::before {
+  box-shadow: inset 0px 0px 8px 3px #177831;
+}
+.time-animation-4::before {
+  box-shadow: inset 0px 0px 8px 4px #177831;
+}
+.time-animation-5::before {
+  box-shadow: inset 0px 0px 8px 5px #177831;
+}
+.time-animation-6::before {
+  box-shadow: inset 0px 0px 8px 6px #177831;
+}
+.time-animation-7::before {
+  box-shadow: inset 0px 0px 8px 7px #177831;
+}
