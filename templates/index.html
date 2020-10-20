@@ -112,30 +112,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!---
-    <div class="form-group">
-        <label for="first-key-setting">Primary list add time key:</label>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <input type="checkbox" id="first-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
-                </div>
-            </div>
-            <input class="form-control" id="first-key-setting" type="text" value="KeyX">
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="second-key-setting">Secondary list add time key:</label>
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <div class="input-group-text">
-                    <input type="checkbox" id="second-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
-                </div>
-            </div>
-            <input class="form-control" id="second-key-setting" type="text" value="KeyZ">
-        </div>
-    </div>
-        -->
                                     </div>
                                 </div>
                             </div>
@@ -224,25 +200,75 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="first-key-setting">Primary list add time key:</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" id="first-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                <label for="z-key-setting">Add list for z key:</label>
+                                <div class="dropdown show btn-group d-flex justify-content-center">
+                                    <div class="input-group mt-1 mb-1 list-button">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" class="checkbox" id="z-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                            </div>
+                                        </div>
+                                        <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="z-key-setting" readonly>
+                                        <div class="input-group-append ">
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="z-key-setting" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu dropdown-menu-right z-key-dropdown-menu key-list">
+                                            </div>
                                         </div>
                                     </div>
-                                    <input class="form-control" id="first-key-setting" type="text" value="KeyX">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="second-key-setting">Secondary list add time key:</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" id="second-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                <label for="x-key-setting">Add list for x key:</label>
+                                <div class="dropdown show btn-group d-flex justify-content-center">
+                                    <div class="input-group mt-1 mb-1 list-button">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" class="checkbox" id="x-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                            </div>
+                                        </div>
+                                        <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="x-key-setting" readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="x-key-dropdown" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu dropdown-menu-right x-key-dropdown-menu key-list">
+                                            </div>
                                         </div>
                                     </div>
-                                    <input class="form-control" id="second-key-setting" type="text" value="KeyZ">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="c-key-setting">Add list for c key:</label>
+                                <div class="dropdown show btn-group d-flex justify-content-center">
+                                    <div class="input-group mt-1 mb-1 list-button">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" class="checkbox" id="c-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                            </div>
+                                        </div>
+                                        <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="c-key-setting" readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="c-key-dropdown" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu dropdown-menu-right c-key-dropdown-menu key-list">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="v-key-setting">Add list for v key:</label>
+                                <div class="dropdown show btn-group d-flex justify-content-center">
+                                    <div class="input-group mt-1 mb-1 list-button">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <input type="checkbox" class="checkbox" id="v-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                            </div>
+                                        </div>
+                                        <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="v-key-setting" readonly>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="v-key-dropdown" data-toggle="dropdown"></button>
+                                            <div class="dropdown-menu dropdown-menu-right v-key-dropdown-menu key-list">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

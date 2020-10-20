@@ -4,8 +4,9 @@
 #   Import things
 import uuid
 import json
-import config
 
+
+from . import config
 from flask import Flask, flash, render_template, session, request, url_for, redirect
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
