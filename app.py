@@ -4,6 +4,7 @@
 #   Import things
 import uuid
 import json
+import config
 
 from flask import Flask, flash, render_template, session, request, url_for, redirect
 from flask_mysqldb import MySQL
@@ -13,31 +14,31 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 
 #   Create an instance of this class
 app = Flask(__name__)
-app.secret_key = 'secretkey'
+app.secret_key = config.SECRET_KEY
 
 #   Setup the mysql connection and create an instace of it
-app.config['MYSQL_HOST'] = 'mysql.ytmarker.com'
-app.config['MYSQL_USER'] = 'ytmarkercom1'
-app.config['MYSQL_PASSWORD'] = 'a!NS^iuHd98shad!9cadw^^s83N^sda'
-app.config['MYSQL_DB'] = 'ytmarker_com'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+app.config['MYSQL_HOST'] = config.MYSQL_HOST
+app.config['MYSQL_USER'] = config.MYSQL_USER
+app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
+app.config['MYSQL_DB'] = config.MYSQL_DB
+app.config['MYSQL_CURSORCLASS'] = config.MYSQL_CURSORCLASS
 
 mysql = MySQL(app)
 
 #   Setup the email connection and create an instance of it
-app.config['MAIL_SERVER'] = 'smtp.dreamhost.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'no-reply@ytmarker.com'
-app.config['MAIL_PASSWORD'] = 'ndan^sio!!!dnoaDWO^^3d09ajDASLN'
-app.config['MAIL_DEFAULT_SENDER'] = 'no-reply@ytmarker.com'
-app.config['MAIL_MAX_EMAILS'] = 5
-app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_SERVER'] = config.MAIL_SERVER
+app.config['MAIL_PORT'] = config.MAIL_PORT
+app.config['MAIL_USE_SSL'] = config.MAIL_USE_SSL
+app.config['MAIL_USERNAME'] = config.MAIL_USERNAME
+app.config['MAIL_PASSWORD'] = config.MAIL_PASSWORD
+app.config['MAIL_DEFAULT_SENDER'] = config.MAIL_DEFAULT_SENDER
+app.config['MAIL_MAX_EMAILS'] = config.MAIL_MAX_EMAILS
+app.config['MAIL_SUPPRESS_SEND'] = config.MAIL_SUPPRESS_SEND
 
 mail = Mail()
 mail.init_app(app)
 
-s = URLSafeTimedSerializer('secretkey')
+s = URLSafeTimedSerializer(config.SECRET_KEY)
 
 #   Return the basic index template
 @app.route('/')
@@ -278,6 +279,7 @@ def login():
         flash("That password is incorrect!")
         return render_template("index.html")
     
+    #   Log user in
     session['id'] = data[0]['id']
     session['username'] = params['_username']
 
@@ -380,7 +382,7 @@ def forgot_password(token):
             flash("That password is too long - keep it under 20 characters!")
             return render_template("resetpassword.html")
 
-        #   Open connection to database
+        #   Open connection to database and save information
         con = mysql.connection
         cur = con.cursor()
 
@@ -497,7 +499,7 @@ def deleteVideo():
         flash("That video doesn't exist in the database")
         return redirect('/')
 
-    #   Open connection to database
+    #   Open connection to database and remove the video
     con = mysql.connection
     cur = con.cursor()
 
@@ -561,6 +563,7 @@ def video(token):
         flash("That video doesn't exist")
         return render_template('index.html', session=session) 
 
+    #   Load the video info into readable format
     info = json.loads(data[0]['info'])
 
     if session:
