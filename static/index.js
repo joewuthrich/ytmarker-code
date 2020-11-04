@@ -500,16 +500,16 @@ $(document).keypress(function (event) {
         return;
 
     //  If the key matches one of the keys
-    if (event.code === 'KeyZ') {
+    if (event.key === 'Z') {
         addTimeWithKey('z')
     }
-    else if (event.code === 'KeyX') {
+    else if (event.key === 'X') {
         addTimeWithKey('x')
     }
-    else if (event.code === 'KeyC') {
+    else if (event.key === 'C') {
         addTimeWithKey('c')
     }
-    else if (event.code === 'KeyV') {
+    else if (event.key === 'V') {
         addTimeWithKey('v')
     }
     return;
@@ -537,7 +537,7 @@ $(document).keydown(function (event) {
     if (!inputBox)
         return;
 
-    if (!(event.code === 'Escape' || event.code === 'Enter'))
+    if (!(event.key === 'Escape' || event.key === 'Enter'))
         return;
 
     inputBox.blur();
