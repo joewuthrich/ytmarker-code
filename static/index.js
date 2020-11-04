@@ -860,6 +860,12 @@ $(".checkbox").change(function () {
 });
 
 
+//  Toggle dark mode on or off
+function toggleDarkMode() {
+    document.body.classList.toggle("enabled");
+}
+
+
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
     return id.replace(/ /g, '⛕');
