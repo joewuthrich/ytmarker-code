@@ -162,6 +162,9 @@ function saveVideoTime() {
     setTimeout(function () {
         if (player.getCurrentTime() != undefined) {
 
+            if (storage['video']['url'] == undefined)
+                return;
+
             storage["video"]["time"] = player.getCurrentTime().toString();
             syncStorage();
 
@@ -649,8 +652,16 @@ function loadVideo(info = '') {
     }
 
     //  Load the settings
-    for (var key in storage["settings"])
-            $('#' + key).val(getNameFromID(storage["settings"][key]));
+    $('delayed-setting').val(storage["settings"]["delayed-setting"]);
+
+    keys = ['z', 'x', 'c', 'v']
+
+    for (var key in keys) {
+        $('#' + keys[key] + '-key-setting').val(getNameFromID(storage['settings'][keys[key] + '-key-setting']));
+
+        if (storage['settings'][keys[key] + '-key-delay'] == 'true')
+            $('#' + keys[key] + '-key-delay').prop('checked', true);
+    }
 }
 
 
@@ -680,6 +691,18 @@ function deleteOldVideo(blank = false) {
 
     player.stopVideo();
 
+    $('.key-list-dropdown-item').each(function () {
+        $(this).remove();
+    });
+
+    keys = ['z','x','c','v']
+
+    for (var key in keys) {
+        $('#' + keys[key] + '-key-setting').val('');
+
+        $('#' + keys[key] + '-key-delay').prop('checked', false);
+    }
+
     //  Set the buttons back to grayed out
     $('#add-time').attr("style", "background-color: #333832");
     $('#add-time-late').attr("style", "background-color: #2c302b");
@@ -695,6 +718,18 @@ function deleteOldVideo(blank = false) {
     //  Reset variables
     storage['video'] = {};
     storage['lists'] = {};
+    storage['settings'] = {
+        "delayed-setting": "5",
+        "z-key-setting": "",
+        "x-key-setting": "",
+        "c-key-setting": "",
+        "v-key-setting": "",
+        "z-key-delay": 'false',
+        "x-key-delay": 'false',
+        "c-key-delay": 'false',
+        "v-key-delay": 'false'
+    };
+
     listNum = 0;
 
     syncStorage();
