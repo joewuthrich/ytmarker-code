@@ -10,7 +10,7 @@
 
 .enabled {
     color: var(--text-color);
-    background-color: var(--background-color);.input-group-text
+    background-color: var(--background-color);
 }
 
 body.enabled .small-head-container {
