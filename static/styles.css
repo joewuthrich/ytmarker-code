@@ -29,7 +29,7 @@ main .form-control
   border-radius: 4px;
   background-color: #1f1f1f;
   position: relative;
-  width: 20.9em;
+  display: inline-block;
   box-shadow: 7px 10px black;
   margin: auto;
 }
@@ -60,11 +60,11 @@ main .form-control
 }
 
 .dropdown-menu-center {
-    right: auto;
-    left: 50%;
-    -webkit-transform: translate(-50%, 0);
-    -o-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
+  right: auto;
+  left: 50%;
+  -webkit-transform: translate(-50%, 0);
+  -o-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 
 input::-webkit-outer-spin-button,
