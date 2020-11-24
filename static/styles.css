@@ -169,6 +169,10 @@ input[type=number] {
   background-color: #88b07b;
 }
 
+    .add-time-enabled:hover {
+        background-color: #789c6d;
+    }
+
 .add-time-late {
   background-color: #2c302b;
   min-height: 50px;
@@ -180,6 +184,10 @@ input[type=number] {
 .add-time-late-enabled {
   background-color: #5d8560;
 }
+
+    .add-time-late-enabled:hover {
+        background-color: #4b6b4d;
+    }
 
 .clear {
   clear:both;

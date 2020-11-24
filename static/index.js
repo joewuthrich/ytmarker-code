@@ -445,34 +445,6 @@ $(document).on('focusout', '#delayed-setting', function() {
 });
 
 
-//  When a person hovers over the add time button (first is hover, second is mouse leaves)
-$('#add-time, #add-time-late').hover(function() {
-    if (storage['video']['url'] === undefined)
-        return;
-
-    //  Get correct background color
-    var backgroundColor = "#789c6d";
-    if ($(this).attr('id') === 'add-time-late')
-        backgroundColor = "#4b6b4d";
-
-    if (storage['video']['url'] != '') {
-        $(this).attr("style", "background-color: " + backgroundColor);
-    }
-}, function () {
-        if (storage['video']['url'] === undefined)
-            return;
-
-        //  Get correct background color
-        var backgroundColor = "#88b07b";
-        if ($(this).attr('id') === 'add-time-late')
-            backgroundColor = "#5d8560";
-
-        if (storage['video']['url'] != '') {
-            $(this).attr("style", "background-color: " + backgroundColor);
-    }
-});
-
-
 //  Register keyboard input for adding lists
 $(document).keypress(function (event) {
     //  If the person is focused in an input or select box

@@ -62,6 +62,10 @@ body.enabled .add-time-enabled {
     background-color: lightgreen;
 }
 
+    body.enabled .add-time-enabled:hover {
+        background-color: darkseagreen;
+    }
+
 body.enabled .add-time-late {
     background-color: darkseagreen;
 }
@@ -69,6 +73,10 @@ body.enabled .add-time-late {
 body.enabled .add-time-late-enabled {
     background-color: darkseagreen;
 }
+
+    body.enabled .add-time-late-enabled:hover {
+        background-color: darkgreen;
+    }
 
 body.enabled .time-time {
     color: lightblue;
