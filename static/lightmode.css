@@ -58,7 +58,15 @@ body.enabled .add-time {
     background-color: lightgreen;
 }
 
+body.enabled .add-time-enabled {
+    background-color: lightgreen;
+}
+
 body.enabled .add-time-late {
+    background-color: darkseagreen;
+}
+
+body.enabled .add-time-late-enabled {
     background-color: darkseagreen;
 }
 

@@ -42,11 +42,8 @@ $(document).ready(function () {
 
     //  Dark mode on page load if the browser is in dark mode
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        if (document.body.classList.contains("enabled")) {
+        if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
-
-
-        }
     }
     else
     {
@@ -146,8 +143,10 @@ function showVideo(url, time = 0, loading = false) {
         $('#yt-cover').hide();
         $('.video-input').remove();
 
-        $('#add-time').attr("style", "background-color: #88b07b");
-        $('#add-time-late').attr("style", "background-color: #5d8560");
+        $('#add-time').addClass('add-time-enabled');
+        $('#add-time-late').addClass('add-time-late-enabled');
+
+        
         $('#add-list-dropdown').removeClass('disabled');
     }
 
@@ -688,7 +687,8 @@ function deleteOldVideo(blank = false) {
     }
 
     //  Set the buttons back to grayed out
-    disableButtons();
+    $('#add-time').removeClass('add-time-enabled');
+    $('#add-time-late').removeClass('add-time-late-enabled');
 
     //  Disable the list dropdown and list name
     $('#add-list-dropdown').addClass('disabled');
@@ -844,25 +844,8 @@ $(".checkbox").change(function () {
 //  Toggle dark mode on or off
 function toggleDarkMode() {
     document.body.classList.toggle("enabled");
-
-    if (player.getVideoData()['video_id'] === null) {
-        disableButtons();
-    }
 }
 
-
-//  Gray out the buttons to create time
-function disableButtons() {
-    //  If dark mode
-    if (!document.body.classList.contains("enabled")) {
-        $('#add-time').attr("style", "background-color: #333832");
-        $('#add-time-late').attr("style", "background-color: #2c302b");
-    }
-    else {
-        $('#add-time').attr("style", "background-color: #e2f2df");
-        $('#add-time-late').attr("style", "background-color: #d9e8d5");
-    }
-}
 
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
