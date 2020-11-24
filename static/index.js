@@ -2,7 +2,6 @@
 
 //  Setup variables
 var currentList;
-var secondList;
 var oldInput = "List 1";
 var loadingLists;
 var listNum = 0;
@@ -43,8 +42,11 @@ $(document).ready(function () {
 
     //  Dark mode on page load if the browser is in dark mode
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        if (document.body.classList.contains("enabled"))
+        if (document.body.classList.contains("enabled")) {
             document.body.classList.remove("enabled");
+
+
+        }
     }
     else
     {
@@ -196,8 +198,6 @@ function addList(name = '', loading = false) {
     //  Hide the current list
     $("[id='" + currentList + "']").hide();
 
-    secondList = currentList;
-
     //  If this is the first list, add a divider to the dropdown between times and add-time button
     if (listNum === 1)
         $('.time-dropdown-divider').attr('style', 'display: block');
@@ -223,17 +223,10 @@ function addList(name = '', loading = false) {
     //  Turn the current list into a valid ID for storage
     currentList = createValidID(currentList);
 
-    //  If this is the first list
-    if (secondList === undefined)
-        secondList = currentList;
-
     oldInput = currentList;
 
     //  Add the current list to the table of lists
     $('#time-table').append('<tbody id="' + currentList + '" class="time-list"></tbody>');
-
-    //  Set the tooltip of the input to show what the secondary list is
-    $('#current-name').attr('title', 'Secondary List: ' + getNameFromID(secondList)).tooltip('_fixTitle').tooltip('show').tooltip('hide');
 
     //  If there is a list already there but hidden in the dropdown, allow it to be shown
     $('a.disabled').attr('style', 'display: block');
@@ -248,18 +241,6 @@ function addList(name = '', loading = false) {
 
 //  Add a time to the list
 function addTime(isDelayed = false, name = '', list = currentList, loading = false, delayTime = 0) {
-
-    /*
-    if (player === undefined) {
-        loadYTPlayer();
-    }
-
-    if (player.getVideoData()['video_id'] === null) {
-        if (!loadingLists) {
-            return
-        }
-    }*/
-
     var time = 0;
 
     if (player.getCurrentTime() != undefined)
@@ -413,11 +394,6 @@ $(document).on('click', '.time-dropdown-item', function () {
     $('a.disabled').attr('style', 'display: block');
     $('a.disabled').removeClass("disabled");
 
-    secondList = currentList;
-
-    //  Set the tooltip of the input box to the new secondary list
-    $('#current-name').attr('title', 'Secondary List: ' + getNameFromID(secondList)).tooltip('_fixTitle').tooltip('show').tooltip('hide');
-
     currentList = createValidID($(this).html());
     oldInput = currentList;
 
@@ -441,11 +417,6 @@ $(document).on('focusout', '#new-video-input', function () {
 
 //  When a person changes the name of the time
 $(document).on('focusout', '.time-name', function() {
-    /*
-    if (player.getVideoData()['video_id'] === null) {
-        $(this).val("");
-        return;
-    }*/
 
     //  Get the time element
     var row = $(this.closest('tr'));
@@ -700,6 +671,8 @@ function deleteOldVideo(blank = false) {
         $('#yt-cover').show();
     }
 
+    player.loadVideoById('', 0);
+    player.seekTo(0);
     player.stopVideo();
 
     $('.key-list-dropdown-item').each(function () {
@@ -715,15 +688,12 @@ function deleteOldVideo(blank = false) {
     }
 
     //  Set the buttons back to grayed out
-    $('#add-time').attr("style", "background-color: #333832");
-    $('#add-time-late').attr("style", "background-color: #2c302b");
+    disableButtons();
 
     //  Disable the list dropdown and list name
     $('#add-list-dropdown').addClass('disabled');
 
-    //  Set the tooltip, currentList and secondList to nothing
-    $('#current-name').attr('title', 'Secondary List: ').tooltip('_fixTitle').tooltip('show').tooltip('hide');
-    secondList = ""
+    //  Set the currentList to nothing
     currentList = ""
 
     //  Reset variables
@@ -874,8 +844,25 @@ $(".checkbox").change(function () {
 //  Toggle dark mode on or off
 function toggleDarkMode() {
     document.body.classList.toggle("enabled");
+
+    if (player.getVideoData()['video_id'] === null) {
+        disableButtons();
+    }
 }
 
+
+//  Gray out the buttons to create time
+function disableButtons() {
+    //  If dark mode
+    if (!document.body.classList.contains("enabled")) {
+        $('#add-time').attr("style", "background-color: #333832");
+        $('#add-time-late').attr("style", "background-color: #2c302b");
+    }
+    else {
+        $('#add-time').attr("style", "background-color: #e2f2df");
+        $('#add-time-late').attr("style", "background-color: #d9e8d5");
+    }
+}
 
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
