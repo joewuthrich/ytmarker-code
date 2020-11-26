@@ -55,27 +55,27 @@ body.enabled .dropdown-text {
 }
 
 body.enabled .add-time {
-    background-color: lightgreen;
+    background-color: #ddf5dc;
 }
 
 body.enabled .add-time-enabled {
-    background-color: lightgreen;
+    background-color: #cff0ce;
 }
 
     body.enabled .add-time-enabled:hover {
-        background-color: darkseagreen;
+        background-color: #c0e0bf;
     }
 
 body.enabled .add-time-late {
-    background-color: darkseagreen;
+    background-color: #c6d9c5;
 }
 
 body.enabled .add-time-late-enabled {
-    background-color: darkseagreen;
+    background-color: #bad4b8;
 }
 
     body.enabled .add-time-late-enabled:hover {
-        background-color: darkgreen;
+        background-color: #b1c9af;
     }
 
 body.enabled .time-time {
