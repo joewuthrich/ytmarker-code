@@ -79,11 +79,11 @@ body.enabled .add-time-late-enabled {
     }
 
 body.enabled .time-time {
-    color: lightblue;
+    color: #a1d6d3;
 }
 
     body.enabled .time-time:hover {
-        color: darkcyan;
+        color: #63c2bd;
     }
 
 body.enabled .time-delete {
