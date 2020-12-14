@@ -456,16 +456,16 @@ $(document).keypress(function (event) {
         return;
 
     //  If the key matches one of the keys
-    if (event.key === 'Z') {
+    if (event.key.toUpperCase() === 'Z') {
         addTimeWithKey('z')
     }
-    else if (event.key === 'X') {
+    else if (event.key.toUpperCase() === 'X') {
         addTimeWithKey('x')
     }
-    else if (event.key === 'C') {
+    else if (event.key.toUpperCase() === 'C') {
         addTimeWithKey('c')
     }
-    else if (event.key === 'V') {
+    else if (event.key.toUpperCase() === 'V') {
         addTimeWithKey('v')
     }
     return;
