@@ -601,7 +601,7 @@ function loadVideo(info = '') {
 
         //  For each time in the list
         for (var i = 0; i < storage['lists'][key].length; i++)
-            addTime(false, storage['lists'][key][i]["name"], currentList, true, false, parseInt(storage['lists'][key][i]["seconds"]));
+            addTime(false, storage['lists'][key][i]["name"], currentList, true, parseInt(storage['lists'][key][i]["seconds"]));
     }
 
     //  Load the settings
