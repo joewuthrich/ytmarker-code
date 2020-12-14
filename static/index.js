@@ -367,7 +367,7 @@ $('#current-name').on('focusout', function () {
     syncStorage();
 
     $('.key-list-dropdown-item').each(function () {
-        if ($(this).html() == oldInput)
+        if (createValidID($(this).html()) == oldInput)
             $(this).html(input);
     });
 
