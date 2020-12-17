@@ -367,7 +367,7 @@ $('#current-name').on('focusout', function () {
     syncStorage();
 
     $('.key-list-dropdown-item').each(function () {
-        if ($(this).html() == oldInput)
+        if (createValidID($(this).html()) == oldInput)
             $(this).html(input);
     });
 
@@ -456,16 +456,16 @@ $(document).keypress(function (event) {
         return;
 
     //  If the key matches one of the keys
-    if (event.key === 'Z') {
+    if (event.key.toUpperCase() === 'Z') {
         addTimeWithKey('z')
     }
-    else if (event.key === 'X') {
+    else if (event.key.toUpperCase() === 'X') {
         addTimeWithKey('x')
     }
-    else if (event.key === 'C') {
+    else if (event.key.toUpperCase() === 'C') {
         addTimeWithKey('c')
     }
-    else if (event.key === 'V') {
+    else if (event.key.toUpperCase() === 'V') {
         addTimeWithKey('v')
     }
     return;
@@ -601,7 +601,7 @@ function loadVideo(info = '') {
 
         //  For each time in the list
         for (var i = 0; i < storage['lists'][key].length; i++)
-            addTime(false, storage['lists'][key][i]["name"], currentList, true, false, parseInt(storage['lists'][key][i]["seconds"]));
+            addTime(false, storage['lists'][key][i]["name"], currentList, true, parseInt(storage['lists'][key][i]["seconds"]));
     }
 
     //  Load the settings
