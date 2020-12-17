@@ -1,28 +1,32 @@
 {% extends "layout.html" %}
 
+{% block scripts %}
+<script src="/static/basic.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block title %}
     Videos
 {% endblock %}
 
 {% block main %}
-    <div class="saved-video-column d-flex flex-column">
-        <div class="saved-video-row d-flex flex-row justify-content-around">
-            {% for video in videos %}
-                <a onclick="setStorage({{video['video']}});" href="/">
-                    <div class="saved-video-element">
-                        <img class="saved-video-thumbnail" src="http://img.youtube.com/vi/{{video['id']}}/maxresdefault.jpg" alt="Thumbnail"/>
-                        <br/>
-                        {{video['id']}}
-                    </div>
-                </a>
-            {% endfor %}
-            {% for i in range(templates) %}
-                <div class="saved-video-element">
-                    <img class="saved-video-thumbnail" src="static/ytmarkerthumbnail.png" alt="Unused Thumbnail"/>
-                    <br/>
-                    Unused
-                </div>
-            {% endfor %}
+<div class="saved-video-column d-flex flex-column">
+    <div class="saved-video-row d-flex flex-row justify-content-around">
+        {% for video in videos %}
+        <a onclick="setStorage({{video['video']}});" href="/">
+            <div class="saved-video-element">
+                <img class="saved-video-thumbnail" src="http://img.youtube.com/vi/{{video['id']}}/maxresdefault.jpg" alt="Thumbnail" />
+                <br />
+                {{video['id']}}
+            </div>
+        </a>
+        {% endfor %}
+        {% for i in range(templates) %}
+        <div class="saved-video-element">
+            <img class="saved-video-thumbnail" src="static/ytmarkerthumbnail.png" alt="Unused Thumbnail" />
+            <br />
+            Unused
         </div>
+        {% endfor %}
     </div>
+</div>
 {% endblock %}
