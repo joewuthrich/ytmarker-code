@@ -416,11 +416,11 @@ def save():
 
     if not session['id']:
         flash('You must be logged in to do that')
-        return redirect('/')
+        return ''
 
     if not info:
         flash('You must have a video open to do that')
-        return redirect('/')
+        return ''
 
     #   Open connection to database
     con = mysql.connection
@@ -435,32 +435,32 @@ def save():
         '_user_id': session['id']
     }
 
-    query = 'SELECT info FROM videos WHERE user_id = %(_user_id)s'
+    query = 'SELECT uuid, info FROM videos WHERE user_id = %(_user_id)s'
     cur.execute(query, params)
     data = cur.fetchall();
-
-    params = {
-        '_user_id': session['id'],
-        '_info': info
-    }
 
     id = '","id":"' + videoID
 
     #   Update the video if it already exists
     for saved in data:
         if id in saved['info']:
-            query = 'UPDATE videos SET info = %(_info)s WHERE user_id = %(_user_id)s'
+            params = {
+                '_uuid': saved['uuid'],
+                '_info': info
+            }
+
+            query = 'UPDATE videos SET info = %(_info)s WHERE uuid = %(_uuid)s'
 
             cur.execute(query, params)
             con.commit()
 
             flash('Video updated')
-            return redirect('/')
+            return ''
 
 
     if len(data) >= 2:
         flash('You already have two videos saved - buy premium to save unlimited!')
-        return redirect('/')
+        return ''
 
     #   Insert into database
     while True:
@@ -489,7 +489,7 @@ def save():
 
             flash(Markup('Video saved at link <a class="link-saved-video" data-toggle="tooltip" title="Click \
             to copy" data-placement="top" href="#">www.ytmarker.com/video/' + uid + '</a>'))
-            return redirect('/')
+            return ''
 
 
 #   Remove a saved video
@@ -500,11 +500,11 @@ def deleteVideo():
 
     if not session['id']:
         flash('You must be logged in to do that')
-        return redirect('/')
+        return ''
 
     if not info:
         flash("That video doesn't exist in the database")
-        return redirect('/')
+        return ''
 
     #   Open connection to database and remove the video
     con = mysql.connection
@@ -521,7 +521,7 @@ def deleteVideo():
     con.commit()
 
     flash('Video Deleted')
-    return redirect('/')
+    return ''
 
 
 #   Return a page with all the videos

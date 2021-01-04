@@ -751,7 +751,10 @@ function saveVideo() {
     $.post("/save", {
         info: JSON.stringify(storage),
         videoID: storage["video"]["id"]
-    }, function (data) {});
+    }, function (data) {
+        //  Reload the page
+            window.location.reload();
+    });
 }
 
 
@@ -762,6 +765,7 @@ function deleteVideo(info) {
     $.post("/deleteVideo", {
         info: JSON.stringify(info)
     }, function (data) {
+        //  Reload the page
         window.location.href = "http://www.ytmarker.com/";
     });
 }
