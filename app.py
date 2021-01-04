@@ -7,7 +7,7 @@ import json
 
 
 from . import config
-from flask import Flask, flash, render_template, session, request, url_for, redirect
+from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -454,7 +454,8 @@ def save():
             cur.execute(query, params)
             con.commit()
 
-            flash('Video updated')
+            flash(Markup('<a class="link-saved-video" data-toggle="tooltip" title="Click to copy" \
+            data-placement="top" href="#">www.ytmarker.com/video/' + saved['uuid'] + '</a> updated'))
             return ''
 
 
