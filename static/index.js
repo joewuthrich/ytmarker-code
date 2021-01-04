@@ -472,6 +472,39 @@ $(document).keypress(function (event) {
 });
 
 
+//  Youtube keyboard controls
+$(document).keydown(function (event) {
+    if ($(event.target).closest("input, select")[0])
+        return;
+
+    if (player.getVideoData()['video_id'] === undefined)
+        return;
+
+    if (event.key.toUpperCase() === 'M') {
+        //  Mute YouTube Video
+        if (player.isMuted())
+            player.unMute()
+        else
+            player.mute()
+    }
+    else if (event.key.toUpperCase() === 'K') {
+        //  Pause YouTube Video
+        if (player.getPlayerState() == 1)
+            player.pauseVideo()
+        else if (player.getPlayerState() == 2 || player.getPlayerState() == -1)
+            player.playVideo()
+    }
+    else if (event.key === 'ArrowLeft') {
+        //  Skip Backward
+        player.seekTo(Math.max(0, (player.getCurrentTime() - 5)));
+    }
+    else if (event.key === 'ArrowRight') {
+        //  Skip Forward
+        player.seekTo(player.getCurrentTime() + 5);
+    }
+}); 
+
+
 function addTimeWithKey(key) {
 
     //  Add the animation and the time to the list
