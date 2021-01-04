@@ -100,10 +100,12 @@ def register():
         cur = con.cursor()
 
         #   Create the tempusers table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
+        cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, \
+        username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
         
         #   Create the users table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0)')
+        cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) \
+        UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0)')
 
         params = {
             '_email': email
@@ -169,7 +171,8 @@ def register():
 
         link = url_for('confirm_email', token=token, _external=True)
 
-        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at YTMarker.com, please ignore this email.'.format(request.form['username'], link)
+        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at \
+        YTMarker.com, please ignore this email.'.format(request.form['username'], link)
 
         #   Send the message
         mail.send(msg)
@@ -340,7 +343,8 @@ def forgot():
 
         link = url_for('forgot_password', token=token, _external=True)
 
-        msg.body = 'Hi, you requested a password reset!.\r\n\r\n{}\r\n\r\nIf you did not request to reset your password, please ignore this email.'.format(link)
+        msg.body = 'Hi, you requested a password reset!.\r\n\r\n{}\r\n\r\nIf you did not request to reset your \
+        password, please ignore this email.'.format(link)
 
         #   Send the message
         mail.send(msg)
@@ -423,7 +427,8 @@ def save():
     cur = con.cursor()
 
     #   Create the videos table if it doesn't exist
-    cur.execute('CREATE TABLE IF NOT EXISTS videos (uuid VARCHAR(50) NOT NULL PRIMARY KEY UNIQUE, user_id INT NOT NULL, info TEXT NOT NULL)')
+    cur.execute('CREATE TABLE IF NOT EXISTS videos (uuid VARCHAR(50) NOT NULL PRIMARY KEY UNIQUE, user_id \
+    INT NOT NULL, info TEXT NOT NULL)')
 
     #   Insert the user id and video info into the database
     params = {
@@ -482,7 +487,8 @@ def save():
             cur.execute(query, params)
             con.commit()
 
-            flash('Video saved')
+            flash(Markup('Video saved at link <a class="link-saved-video" data-toggle="tooltip" title="Click \
+            to copy" data-placement="top" href="#">www.ytmarker.com/video/' + uid + '</a>'))
             return redirect('/')
 
 

@@ -341,6 +341,10 @@ input[type=number] {
     border-radius: 0;
 }
 
+#non-premium-color {
+    color: whitesmoke;
+}
+
 @media (max-width: 900px) {
     .new-video-button {
         border-top-right-radius: 4px !important;
