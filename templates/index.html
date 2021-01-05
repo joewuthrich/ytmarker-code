@@ -31,6 +31,8 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right settings-menu" aria-labelledby="settings-menu">
                                     <div class="px-3 py-1">
+                                        <a class="dropdown-item" href="#" onclick="toggleDarkMode();">Toggle Dark Mode</a>
+                                        <div class="dropdown-divider"></div>
                                         <div class="form-group">
                                             <label for="delayed-setting">Delayed button delay:</label>
                                             <div class="input-group">
@@ -38,6 +40,14 @@
                                                 <div class="input-group-append">
                                                     <span class="input-group-text delayed-settings-append">seconds</span>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label for="focus-time-setting">
+                                                    Autofocus time name:
+                                                    <input class="checkbox" id="focus-time-setting" type="checkbox" style="position: relative; left: 2%; top: 1px">
+                                                </label>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -112,7 +122,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <a class="dropdown-item" href="#" onclick="toggleDarkMode();">Toggle Dark Mode</a>
                                     </div>
                                 </div>
                             </div>
@@ -183,6 +192,7 @@
         </div>
     </header>
 
+
     <div class="small-head-outer small-nav">
         <div class="small-head-container">
             <div class="btn-group" role="group" aria-label="small-menu">
@@ -192,6 +202,8 @@
                     </button>
                     <div class="dropdown-menu settings-menu" aria-labelledby="settings-menu">
                         <div class="px-3 py-1">
+                            <a class="dropdown-item" href="#" onclick="toggleDarkMode();">Toggle Dark Mode</a>
+                            <div class="dropdown-divider"></div>
                             <div class="form-group">
                                 <label for="delayed-setting">Delayed button delay:</label>
                                 <div class="input-group">
@@ -199,6 +211,14 @@
                                     <div class="input-group-append">
                                         <span class="input-group-text delayed-settings-append">seconds</span>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label for="focus-time-setting">
+                                        Autofocus time name:
+                                        <input class="checkbox" id="focus-time-setting" type="checkbox" style="position: relative; left: 2%; top: 1px">
+                                    </label>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -273,7 +293,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="dropdown-item" href="#" onclick="toggleDarkMode();">Toggle Dark Mode</a>
                         </div>
                     </div>
                 </div>
@@ -301,6 +320,7 @@
                         <div class="px-3 py-1">
                             <a class="dropdown-item" href="/saved">Saved videos</a>
                             <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/premium"><span style="color: gold">Upgrade to Premium</span></a>
                             <a class="dropdown-item" href="/logout">Log Out</a>
                         </div>
                     </div>
@@ -339,6 +359,7 @@
             </div>
         </div>
     </div>
+
 
     <main role="main" class="cover">
         {% for message in get_flashed_messages() %}

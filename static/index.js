@@ -15,6 +15,7 @@ var storage = {
     lists: {},
     settings: {
         "delayed-setting": "5",
+        "focus-time-setting": "true",
         "z-key-setting": "",
         "x-key-setting": "",
         "c-key-setting": "",
@@ -295,7 +296,7 @@ function addTime(isDelayed = false, name = '', list = currentList, loading = fal
     </tr>`;
 
     //  If you've just added a time to the current list with the button, auto-focus the list's name
-    if (!loading) {
+    if (!loading && storage['settings']['focus-time-setting'] == 'true') {
         $('.time-name:visible').eq(0).focus();
     }
 }
@@ -639,6 +640,8 @@ function loadVideo(info = '') {
 
     //  Load the settings
     $('delayed-setting').val(storage["settings"]["delayed-setting"]);
+    if (storage['settings']['focus-time-setting'] == 'true')
+        $('#focus-time-setting').prop('checked', true);
 
     keys = ['z', 'x', 'c', 'v']
 
@@ -706,6 +709,7 @@ function deleteOldVideo(blank = false) {
     storage['lists'] = {};
     storage['settings'] = {
         "delayed-setting": "5",
+        "focus-time-setting": 'true',
         "z-key-setting": "",
         "x-key-setting": "",
         "c-key-setting": "",

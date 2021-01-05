@@ -584,7 +584,8 @@ def video(token):
 #   Premium (temporary)
 @app.route('/premium')
 def premium():
-    flash('You cannot currently upgrade to premium, but if you DM me on Instagram @joewuthrich I may be able give you a month for free.')
+    flash(Markup('You cannot currently upgrade to premium, but if you DM me on Instagram \
+    <a class="time-time" href="https://www.instagram.com/joewuthrich/" style="padding-right: 0%">@joewuthrich</a> I may be able give you a month for free.'))
     return redirect('/')
 
 if __name__ == '__main__':
