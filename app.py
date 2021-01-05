@@ -460,7 +460,8 @@ def save():
 
 
     if len(data) >= 2:
-        flash('You already have two videos saved - buy premium to save unlimited!')
+        flash(Markup('You already have two videos saved - upgrade to <a class="dropdown-item" href="/premium">\
+        <span style="color: gold">premium here</span></a> to save unlimited!'))
         return ''
 
     #   Insert into database
@@ -579,6 +580,12 @@ def video(token):
     else:
         return render_template('index.html', video=info)
 
+
+#   Premium (temporary)
+@app.route('/premium')
+def premium():
+    flash('You cannot currently upgrade to premium, but if you DM me on Instagram @joewuthrich I may be able give you a month for free.')
+    return redirect('/')
 
 if __name__ == '__main__':
     app.debug = True
