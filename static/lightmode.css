@@ -196,8 +196,10 @@ body.enabled .dropdown-divider {
 
 body.enabled .autofocus-enabled {
     background-color: #bad4b8;
+    color: var(--text-color);
 }
 
-    body.enabled .autofocus-enabled:hover {
-        background-color: #b1c9af;
+    body.enabled .autofocus-enabled:hover, body.enabled .autofocus-enabled:focus {
+        background-color: #b1c9af !important;
+        color: var(--item-text-color) !important;
     }

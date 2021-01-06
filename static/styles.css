@@ -347,10 +347,12 @@ input[type=number] {
 
 .autofocus-enabled {
     background-color: #5d8560;
+    color: #b5b5b5;
 }
 
-    .autofocus-enabled:hover {
-        background-color: #789c6d;
+    .autofocus-enabled:hover, .autofocus-enabled:focus {
+        color: #919191 !important;
+        background-color: #4b6b4d !important;
     }
 
 @media (max-width: 900px) {

@@ -642,7 +642,7 @@ function loadVideo(info = '') {
     $('delayed-setting').val(storage["settings"]["delayed-setting"]);
 
     if (storage['settings']['focus-time-setting'] == 'true')
-        $('.focus-time-setting').addClass('autofocus-enabled');
+        $('#focus-time-setting').addClass('autofocus-enabled');
 
     keys = ['z', 'x', 'c', 'v']
 
@@ -703,7 +703,7 @@ function deleteOldVideo(blank = false) {
     $('#add-list-dropdown').addClass('disabled');
 
     //  Turn the autofocus button back on
-    $('.focus-time-setting').addClass('autofocus-enabled');
+    $('#focus-time-setting').addClass('autofocus-enabled');
 
     //  Set the currentList to nothing
     currentList = ""
@@ -864,11 +864,11 @@ function autofocusTime() {
 
     if (storage['settings'][id] == 'false') {
         storage['settings'][id] = 'true';
-        $('.' + id).addClass('autofocus-enabled');
+        $('#' + id).addClass('autofocus-enabled');
     }
     else {
         storage['settings'][id] = 'false';
-        $('.' + id).removeClass('autofocus-enabled');
+        $('#' + id).removeClass('autofocus-enabled');
     }
 }
 
