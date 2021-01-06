@@ -193,3 +193,11 @@ body.enabled #non-premium-color {
 body.enabled .dropdown-divider {
     border-top: var(--form-bg-color-hover) !important;
 }
+
+body.enabled .autofocus-enabled {
+    background-color: #bad4b8;
+}
+
+    body.enabled .autofocus-enabled:hover {
+        background-color: #b1c9af;
+    }

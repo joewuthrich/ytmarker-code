@@ -199,20 +199,20 @@ input[type=number] {
   padding-right: 2%;
 }
 
-.time-time:hover {
-  color: #7882ad;
-  text-decoration: none;
-}
+    .time-time:hover {
+      color: #7882ad;
+      text-decoration: none;
+    }
 
 .time-delete {
   color: #b3a1a1;
   padding-left: 2%;
 }
 
-.time-delete:hover {
-  color: #b07b7b;
-  text-decoration: none;
-}
+    .time-delete:hover {
+      color: #b07b7b;
+      text-decoration: none;
+    }
 
 .register-container {
   padding-top: 50px;
@@ -294,10 +294,10 @@ input[type=number] {
     right: 40px;
 }
 
-.delete-saved-video:hover {
-    color: #b07b7b;
-    text-decoration: none;
-}
+    .delete-saved-video:hover {
+        color: #b07b7b;
+        text-decoration: none;
+    }
 
 .saved-container {
     overflow: hidden;
@@ -344,6 +344,14 @@ input[type=number] {
 #non-premium-color {
     color: whitesmoke;
 }
+
+.autofocus-enabled {
+    background-color: #5d8560;
+}
+
+    .autofocus-enabled:hover {
+        background-color: #789c6d;
+    }
 
 @media (max-width: 900px) {
     .new-video-button {

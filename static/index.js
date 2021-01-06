@@ -640,8 +640,9 @@ function loadVideo(info = '') {
 
     //  Load the settings
     $('delayed-setting').val(storage["settings"]["delayed-setting"]);
+
     if (storage['settings']['focus-time-setting'] == 'true')
-        $('#focus-time-setting').prop('checked', true);
+        $('.focus-time-setting').addClass('autofocus-enabled');
 
     keys = ['z', 'x', 'c', 'v']
 
@@ -700,6 +701,9 @@ function deleteOldVideo(blank = false) {
 
     //  Disable the list dropdown and list name
     $('#add-list-dropdown').addClass('disabled');
+
+    //  Turn the autofocus button back on
+    $('.focus-time-setting').addClass('autofocus-enabled');
 
     //  Set the currentList to nothing
     currentList = ""
@@ -852,6 +856,21 @@ $(".checkbox").change(function () {
 
     syncStorage();
 });
+
+
+//  Toggle on/off time name autofocus
+function autofocusTime() {
+    var id = 'focus-time-setting'
+
+    if (storage['settings'][id] == 'false') {
+        storage['settings'][id] = 'true';
+        $('.' + id).addClass('autofocus-enabled');
+    }
+    else {
+        storage['settings'][id] = 'false';
+        $('.' + id).removeClass('autofocus-enabled');
+    }
+}
 
 
 //  Toggle dark mode on or off
