@@ -164,7 +164,7 @@ body.enabled .dropdown-menu {
 }
 
 body.enabled .dropdown-item {
-    color: #a6a4a4;
+    color: #5c5c5c;
 }
 
     body.enabled .dropdown-item:hover, body.enabled .dropdown-item:focus {
@@ -188,4 +188,8 @@ body.enabled .close {
 
 body.enabled #non-premium-color {
     color: #aaa;
+}
+
+body.enabled .dropdown-divider {
+    border-top: var(--form-bg-color-hover) !important;
 }
