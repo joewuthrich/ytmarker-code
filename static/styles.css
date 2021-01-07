@@ -353,13 +353,21 @@ input[type=number] {
         padding-bottom: 20px;
     }
 
-    head-container {
-        width: auto;
+    .small-head-container {
+        border-radius: 4px;
+        background-color: #1f1f1f;
+        position: relative;
         display: inline-block;
+        box-shadow: 7px 10px black;
+        margin: auto;
     }
 
     .new-video-button {
         border-radius: 0px !important;
+    }
+
+    #settings-menu {
+        border-left: none !important;
     }
 }
 

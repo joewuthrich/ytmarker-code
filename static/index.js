@@ -881,14 +881,22 @@ function toggleDarkMode() {
 
 //  Resort the menus so they they fit on the screen for both wide and narrow screens
 $(window).resize(function () {
-    if ($(window).width() < 900) {
-        if ($('#big-menus').contains('#menus')) {
-            $('#menus').detach().appendTo('#small-menus')
+    console.log('ans' + 12194 / (10 ^ 8));
+    //  If the window is smaller than 900px (matches @media query for css)
+    if (window.innerWidth < 900) {
+        //  If the menus are not place for the screen size
+        if ($.contains($('#big-menus')[0], $('.menus')[0])) {
+            //  Move them
+            $('#big-menus > .menus').each(function () {
+                $(this).detach().appendTo('#small-menus');
+            });
         }
     }
     else {
-        if (!$('#big-menus').contains('#menus')) {
-            $('#menus').detach().appendTo('#big-menus')
+        if ($.contains($('#small-menus')[0], $('.menus')[0])) {
+            $('#small-menus > .menus').each(function () {
+                $(this).detach().appendTo('#big-menus');
+            });
         }
     }
 });
