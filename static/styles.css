@@ -21,24 +21,12 @@ main .form-control
   width: 98%;
 }
 
-.small-head-outer {
-  padding-bottom: 20px;
-}
-
-.small-head-container {
-  border-radius: 4px;
-  background-color: #1f1f1f;
-  position: relative;
-  display: inline-block;
-  box-shadow: 7px 10px black;
-  margin: auto;
-}
-
 .head-container {
   border-radius: 4px;
   background-color: #1f1f1f;
   position: relative;
   width: 100%;
+  display: inline-flex;
   box-shadow: 7px 10px black;
   margin: auto;
 }
@@ -361,12 +349,17 @@ input[type=number] {
         border-bottom-right-radius: 4px !important;
     }
 
-    .big-nav {
-        display: none;
+    .small-head-outer {
+        padding-bottom: 20px;
     }
 
-    .small-nav {
-        display: inline;
+    head-container {
+        width: auto;
+        display: inline-block;
+    }
+
+    .new-video-button {
+        border-radius: 0px !important;
     }
 }
 

@@ -879,6 +879,21 @@ function toggleDarkMode() {
 }
 
 
+//  Resort the menus so they they fit on the screen for both wide and narrow screens
+$(window).resize(function () {
+    if ($(window).width() < 900) {
+        if ($('#big-menus').contains('#menus')) {
+            $('#menus').detach().appendTo('#small-menus')
+        }
+    }
+    else {
+        if (!$('#big-menus').contains('#menus')) {
+            $('#menus').detach().appendTo('#big-menus')
+        }
+    }
+});
+
+
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
     return id.replace(/ /g, '⛕');
