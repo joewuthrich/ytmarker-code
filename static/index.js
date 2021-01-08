@@ -9,7 +9,7 @@ var player;
 var stopTime = false;
 
 
-//  Setup localstorage
+//  Setup storage
 var storage = {
     video: {},
     lists: {},
@@ -36,9 +36,9 @@ $(document).ready(function () {
         trigger: 'hover'
     });
 
-    //  If localstorage exists, set the storage to it
-    if (localStorage.getItem('video') != null) {
-        storage = JSON.parse(localStorage.getItem('video'));
+    //  If sessionstorage exists, set the storage to it
+    if (sessionStorage.getItem('video') != null) {
+        storage = JSON.parse(sessionStorage.getItem('video'));
     }
 
     //  Dark mode on page load if the browser is in dark mode
@@ -96,7 +96,7 @@ function createYoutubePlayer() {
 
 //  Load video in storage when player is ready
 function onPlayerReady(event) {
-    if (localStorage.getItem('video') != null)
+    if (sessionStorage.getItem('video') != null)
         loadVideo(storage);
 }
 
@@ -272,7 +272,7 @@ function addTime(isDelayed = false, name = '', list = currentList, loading = fal
             name: ""
         };
 
-        //  Add the element to the list and sync the lists, storage and localstorage
+        //  Add the element to the list and sync the lists, storage and sessionstorage
         timesList.push(element);
         storage['lists'][currentList] = timesList;
         syncStorage();
@@ -675,7 +675,7 @@ function deleteOldVideo(blank = false) {
 
     //  If you want it to be completly blank (not replacing video)
     if (blank) {
-        localStorage.clear();
+        sessionStorage.clear();
         $('#yt-cover').show();
     }
 
@@ -881,7 +881,6 @@ function toggleDarkMode() {
 
 //  Resort the menus so they they fit on the screen for both wide and narrow screens
 $(window).resize(function () {
-    console.log('ans' + 12194 / (10 ^ 8));
     //  If the window is smaller than 900px (matches @media query for css)
     if (window.innerWidth < 900) {
         //  If the menus are not place for the screen size
@@ -913,7 +912,7 @@ function getNameFromID(id) {
     return id.replace(/⛕/g, ' ');
 }
 
-//  Sync the localstorage up with the storage
+//  Sync the sessionstorage up with the storage
 function syncStorage() {
-    localStorage.setItem('video', JSON.stringify(storage));
+    sessionStorage.setItem('video', JSON.stringify(storage));
 }
