@@ -197,6 +197,16 @@
         </div>
         {% endfor %}
 
+        <div class="modal-outer" id="confirmation-modal">
+            <div class="modal-content">
+                <div class="btn-group">
+                    <p id="modal-content">textetttextext ?? text ? text extete xt</p>
+                    <button class="btn-outline-success btn" id="confirm-button" onclick="">Yes</button>
+                    <button class="btn-outline-danger btn" id="reject-button" onclick="closeModal();">No</button>
+                </div>
+            </div>
+        </div>
+
         <div class="mx-auto d-flex justify-content-center aspect-container" id="aspect-container">
             <div id="player"></div>
 
@@ -211,29 +221,22 @@
         </div>
 
         <div class="mx-auto time-container">
-            <table id="time-table" class="d-flex justify-content-center">
-                <thead>
-                    <tr class="add-time-box">
-                        <a href="#" onClick="addTime();"><div class="add-time" id="add-time" data-toggle="tooltip" title="Add a time to the list" data-placement="top"></div></a>
-                        <a href="#" onClick="addTime(true);"><div class="add-time-late" id="add-time-late" data-toggle="tooltip" title="Add a delayed time to the list" data-placement="top"></div></a>
-                        <div class="clear"></div>
-                    </tr>
-                    <tr>
-                        <div class="dropdown show btn-group time-name-row d-flex justify-content-center">
-                            <div class="input-group mt-1 mb-1 list-button">
-                                <input autocomplete="off" autofocus class="form-control" placeholder="List Name" type="text" value="" id="current-name">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle disabled" id="add-list-dropdown" data-toggle="dropdown"></button>
-                                    <div class="dropdown-menu dropdown-menu-right time-dropdown-menu">
-                                        <div class="dropdown-divider time-dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#" onClick="addList();">Add New List</a>
-                                    </div>
-                                </div>
-                            </div>
+            <a href="#" onClick="addTime();"><div class="add-time" id="add-time" data-toggle="tooltip" title="Add a time to the list" data-placement="top"></div></a>
+            <a href="#" onClick="addTime(true);"><div class="add-time-late" id="add-time-late" data-toggle="tooltip" title="Add a delayed time to the list" data-placement="top"></div></a>
+            <div class="clear"></div>
+            <div class="dropdown show btn-group time-name-row d-flex justify-content-center">
+                <div class="input-group mt-1 mb-1 list-button">
+                    <input autocomplete="off" autofocus class="form-control" placeholder="List Name" type="text" value="" id="current-name">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary dropdown-toggle disabled" id="add-list-dropdown" data-toggle="dropdown"></button>
+                        <div class="dropdown-menu dropdown-menu-right time-dropdown-menu">
+                            <div class="dropdown-divider time-dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" onClick="addList();">Add New List</a>
                         </div>
-                    </tr>
-                </thead>
-            </table>
+                    </div>
+                </div>
+            </div>
+            <table id="time-table" class="d-flex justify-content-center"></table>
         </div>
     </main>
 </div>

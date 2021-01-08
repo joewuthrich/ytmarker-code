@@ -14,11 +14,6 @@
     background-color: var(--background-color);
 }
 
-body.enabled .small-head-container {
-    background-color: var(--item-bg-color);
-    box-shadow: 7px 10px var(--shadow-color);
-}
-
 body.enabled .head-container {
     background-color: var(--item-bg-color);
     box-shadow: 7px 10px var(--shadow-color);
@@ -203,3 +198,19 @@ body.enabled .autofocus-enabled {
         background-color: #b1c9af !important;
         color: var(--item-text-color) !important;
     }
+
+.modal-content {
+    background-color: var(--item-bg-color);
+    box-shadow: 7px 10px var(--shadow-color);
+}
+
+.btn-outline-danger {
+    border-left: 3px solid var(--item-bg-color) !important;
+}
+
+@media (max-width: 900px) {
+    body.enabled .small-head-container {
+        background-color: var(--item-bg-color);
+        box-shadow: 7px 10px var(--shadow-color);
+    }
+}

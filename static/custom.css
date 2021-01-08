@@ -102,3 +102,12 @@
   color: #b5b5b5;
   text-shadow: none;
 }
+
+.button-outline-success {
+	border-radius: 0px !important;
+}
+
+.button-outline-danger {
+	border-radius: 0px !important;
+	border-left: 3px solid #1f1f1f !important;
+}

@@ -901,6 +901,36 @@ $(window).resize(function () {
 });
 
 
+//  Open the modal with custom confirmation dialogue
+function openModal(text, callFunction) {
+    //  Change the modal text and confirmation function
+    $('#modal-content').html(text);
+    $('#modal-confirmation').attr('onclick', callFunction);
+
+    //  Display the modal
+    document.getElementById('confirmation-modal').style.display = "block";
+}
+
+
+//  Close the modal
+function closeModal() {
+    $('#modal-content').html('');
+    $('#modal-confirmation').attr('onclick', '');
+
+    document.getElementById('confirmation-modal').style.display = "none";
+}
+
+
+//  Listen for click on window
+window.onclick = function (event) {
+    //  If person clicks on outer modal layer
+    var modal = document.getElementById('confirmation-modal');
+    if (event.target == modal) {
+        closeModal();
+    }
+} 
+
+
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
     return id.replace(/ /g, '⛕');
