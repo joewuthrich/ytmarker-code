@@ -103,11 +103,14 @@
   text-shadow: none;
 }
 
-.button-outline-success {
+.btn-outline-success {
 	border-radius: 0px !important;
+	width: 10%;
+	margin: 10px;
 }
 
-.button-outline-danger {
+.btn-outline-danger {
 	border-radius: 0px !important;
-	border-left: 3px solid #1f1f1f !important;
+	width: 10%;
+	margin: 10px;
 }

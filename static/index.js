@@ -7,6 +7,10 @@ var loadingLists;
 var listNum = 0;
 var player;
 var stopTime = false;
+var modalConfirmFunc = {
+    func: null,
+    arg: []
+};
 
 
 //  Setup storage
@@ -233,10 +237,14 @@ function addList(name = '', loading = false) {
     $('a.disabled').removeClass("disabled");
 
     //  Add the list to the dropdown, but make it disabled
-    $('.time-dropdown-divider').before('<a class="dropdown-item time-dropdown-item disabled ' + currentList + '" href="#" style="display: none">' + getNameFromID(currentList) + '</a>');
+    $('.time-dropdown-divider').before(`<a class="dropdown-item time-dropdown-item disabled ` + currentList + 
+        `'" href="#" style="display: none">` + getNameFromID(currentList) + 
+        `</a><button type="button" class="close list-delete" onclick="openModal('Would you like to delete the list ` + 
+        getNameFromID(currentList) + ` ?', 'deleteList', ` + currentList + `)">×</button>`);
 
     //  Add the list to the key list dropdowns
-    $('.key-list').append('<a class="dropdown-item key-list-dropdown-item" href="#">' + getNameFromID(currentList) + '</a><button type="button" class="close list-delete" onclick="">×</button>');
+    $('.key-list').append(`<a class="dropdown-item key-list-dropdown-item" href="#">` + getNameFromID(currentList) + 
+        `</a>`);
 }
 
 //  Add a time to the list
@@ -902,21 +910,34 @@ $(window).resize(function () {
 
 
 //  Open the modal with custom confirmation dialogue
-function openModal(text, callFunction) {
-    //  Change the modal text and confirmation function
+function openModal(text, callFunction, arg) {
+    //  Change the modal text
     $('#modal-content').html(text);
-    $('#modal-confirmation').attr('onclick', callFunction);
+    //  Remove old modal click function and add new one 
+    modalConfirmFunc['func'] = callFunction;
+    modalConfirmFunc['arg'] = arg;
 
     //  Display the modal
     document.getElementById('confirmation-modal').style.display = "block";
 }
 
 
-//  Close the modal
+//  Listen for modal confirmation
+$('#modal-confirm-button').click(function() {
+    var func = window[modalConfirmFunc['func']];
+
+    //  Ensure the function is real and run it
+    if (typeof func === "function")
+        func(modalConfirmFunc['arg']);
+
+    closeModal();
+});
+
+
+//  Close the modals
 function closeModal() {
     $('#modal-content').html('');
     
-
     document.getElementById('confirmation-modal').style.display = "none";
 }
 
@@ -929,6 +950,14 @@ window.onclick = function (event) {
         closeModal();
     }
 } 
+
+
+//  Delete a list with the list name as ID
+function deleteList(list) {
+    storage['lists'][list] = undefined;
+
+    ($)
+}
 
 
 //  Determine if video exists when clicking add list
