@@ -5,7 +5,6 @@
 import uuid
 import json
 
-
 from . import config
 from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup
 from flask_mysqldb import MySQL
@@ -114,7 +113,7 @@ def register():
         #   Check if there is already a user
         query = 'SELECT * FROM users WHERE email = %(_email)s'
         cur.execute(query, params)
-        data = cur.fetchall();
+        data = cur.fetchall()
 
         if len(data) != 0:
             flash("There is already an account with that email")
@@ -122,7 +121,7 @@ def register():
 
         query = 'SELECT * FROM tempusers WHERE email = %(_email)s'
         cur.execute(query, params)
-        data = cur.fetchall();
+        data = cur.fetchall()
 
         if len(data) != 0:
             flash("There is already an account with that email")
@@ -143,7 +142,7 @@ def register():
 
         query = 'SELECT * FROM tempusers WHERE username = %(_username)s'
         cur.execute(query, params)
-        data = cur.fetchall();
+        data = cur.fetchall()
 
         if len(data) != 0:
             flash("There is already an account with that username")
@@ -205,7 +204,7 @@ def confirm_email(token):
     #   Get the data out of the temp database
     query = 'SELECT * FROM tempusers WHERE email = %(_email)s'
     cur.execute(query, eparams)
-    data = cur.fetchall();
+    data = cur.fetchall()
 
     if len(data) == 0:
         flash('That token no longer exists')
@@ -230,13 +229,13 @@ def confirm_email(token):
 
     #   Log the user in
     params = {
-        '_username': username,
+        '_username': data[0]['username']
     }
 
     query = 'SELECT * FROM users WHERE username = %(_username)s'
 
     cur.execute(query, params)
-    data = cur.fetchall();
+    data = cur.fetchall()
 
     session['id'] = data[0]['id']
     session['username'] = params['_username']
@@ -266,14 +265,14 @@ def login():
     cur = con.cursor()
 
     params = {
-        '_username': username,
+        '_username': username
     }
 
     #   Check if there is already a user
     query = 'SELECT * FROM users WHERE username = %(_username)s'
 
     cur.execute(query, params)
-    data = cur.fetchall();
+    data = cur.fetchall()
 
     if len(data) == 0:
         flash("That username doesn't exist!")
@@ -329,7 +328,7 @@ def forgot():
         #   Get the data out of the temp database
         query = 'SELECT * FROM users WHERE email = %(_email)s'
         cur.execute(query, eparams)
-        data = cur.fetchall();
+        data = cur.fetchall()
 
         if len(data) == 0:
             flash('There is no account with that email')
@@ -437,7 +436,7 @@ def save():
 
     query = 'SELECT uuid, info FROM videos WHERE user_id = %(_user_id)s'
     cur.execute(query, params)
-    data = cur.fetchall();
+    data = cur.fetchall()
 
     id = '","id":"' + videoID
 
@@ -475,7 +474,7 @@ def save():
         query = 'SELECT * FROM videos WHERE uuid = %(_uuid)s'
 
         cur.execute(query, params)
-        data = cur.fetchall();
+        data = cur.fetchall()
 
         if (len(data) == 0):
             params = {
@@ -541,7 +540,7 @@ def saved():
 
     query = 'SELECT uuid, info FROM videos WHERE user_id = %(_user_id)s'
     cur.execute(query, params)
-    data = cur.fetchall();
+    data = cur.fetchall()
 
     for video in data:
         afterID = video['info'].split('","id":"', 1)[1]
