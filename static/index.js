@@ -621,7 +621,7 @@ function loadVideo(info = '') {
     //  Delete old video if it exists
     deleteOldVideo();
 
-    //  If no new input it provided load from storage
+    //  If no new input it =provided load from storage
     if (info === '')
         info = storage;
 
@@ -946,6 +946,15 @@ window.onclick = function (event) {
         closeModal();
     }
 } 
+
+
+//  Determine if video exists when clicking add list
+function addListKey() {
+    if (player.getVideoData()['video_id'] === undefined) 
+        return;
+
+    addList();
+}
 
 
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
