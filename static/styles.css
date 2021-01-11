@@ -250,6 +250,18 @@ input[type=number] {
   font-size: 0.9vw;
 }
 
+.key-list-dropdown-item {
+  display: block;
+  float: left;
+  padding-right: 4em;
+}
+
+.list-delete {
+  float: right;
+  position: relative;
+  left: -10px;
+}
+
 .settings-menu {
     width: 250px;
 }

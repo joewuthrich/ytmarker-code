@@ -236,7 +236,7 @@ function addList(name = '', loading = false) {
     $('.time-dropdown-divider').before('<a class="dropdown-item time-dropdown-item disabled ' + currentList + '" href="#" style="display: none">' + getNameFromID(currentList) + '</a>');
 
     //  Add the list to the key list dropdowns
-    $('.key-list').append('<a class="dropdown-item key-list-dropdown-item" href="#">' + getNameFromID(currentList) + '</a>');
+    $('.key-list').append('<a class="dropdown-item key-list-dropdown-item" href="#">' + getNameFromID(currentList) + '</a><button type="button" class="close list-delete" onclick="">×</button>');
 }
 
 //  Add a time to the list
@@ -915,7 +915,7 @@ function openModal(text, callFunction) {
 //  Close the modal
 function closeModal() {
     $('#modal-content').html('');
-    $('#modal-confirmation').attr('onclick', '');
+    
 
     document.getElementById('confirmation-modal').style.display = "none";
 }
