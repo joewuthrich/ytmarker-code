@@ -126,7 +126,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right video-options-menu" aria-labelledby="video-options-menu">
                                 <div class="px-3 py-1">
-                                    <a class="dropdown-item" href="#" onclick="deleteOldVideo(true);">Reset Marker</a>
+                                    <a class="dropdown-item" href="#" onclick="openModal('Would you like to clear YTMarker?', 'deleteOldVideo', true)">Reset Marker</a>
                                     <a class="dropdown-item" href="#" onclick="generateList();">Copy list as text</a>
                                     {% if session["id"] %}
                                     <div class="dropdown-divider"></div>
@@ -199,10 +199,10 @@
 
         <div class="modal-outer" id="confirmation-modal">
             <div class="modal-content">
+                <p id="modal-content"></p>
                 <div class="btn-group">
-                    <p id="modal-content">textetttextext ?? text ? text extete xt</p>
-                    <button class="btn-outline-success btn" id="confirm-button" onclick="">Yes</button>
-                    <button class="btn-outline-danger btn" id="reject-button" onclick="closeModal();">No</button>
+                    <button class="btn-outline-success btn" id="modal-confirm-button">Yes</button>
+                    <button class="btn-outline-danger btn" id="modal-reject-button" onclick="closeModal();">No</button>
                 </div>
             </div>
         </div>

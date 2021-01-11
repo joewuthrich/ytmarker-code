@@ -7,6 +7,10 @@ var loadingLists;
 var listNum = 0;
 var player;
 var stopTime = false;
+var modalConfirmFunc = {
+    func: null,
+    arg: []
+};
 
 
 //  Setup storage
@@ -902,20 +906,33 @@ $(window).resize(function () {
 
 
 //  Open the modal with custom confirmation dialogue
-function openModal(text, callFunction) {
-    //  Change the modal text and confirmation function
+function openModal(text, callFunction, arg) {
+    //  Change the modal text
     $('#modal-content').html(text);
-    $('#modal-confirmation').attr('onclick', callFunction);
+    //  Remove old modal click function and add new one 
+    modalConfirmFunc['func'] = callFunction;
+    modalConfirmFunc['arg'] = arg;
 
     //  Display the modal
     document.getElementById('confirmation-modal').style.display = "block";
 }
 
 
-//  Close the modal
+//  Listen for modal confirmation
+$('#modal-confirm-button').click(function() {
+    var func = window[modalConfirmFunc['func']];
+
+    //  Ensure the function is real and run it
+    if (typeof func === "function")
+        func(modalConfirmFunc['arg']);
+
+    closeModal();
+});
+
+
+//  Close the modals
 function closeModal() {
     $('#modal-content').html('');
-    $('#modal-confirmation').attr('onclick', '');
 
     document.getElementById('confirmation-modal').style.display = "none";
 }
