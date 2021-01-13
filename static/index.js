@@ -200,7 +200,7 @@ function saveVideoTime() {
 function addList(name = '', loading = false) {
 
     //  Hide the current list
-    $("[id='" + currentList + "']").hide();
+    $("[id='" + currentList + "-named-list']").hide();
 
     //  If this is the first list, add a divider to the dropdown between times and add-time button
     if (listNum === 1)
@@ -215,7 +215,7 @@ function addList(name = '', loading = false) {
 
             currentList = "List " + listNum;
         }
-        while ($('#' + createValidID(currentList)).length);
+        while ($('#' + createValidID(currentList) + '-named-list').length);
 
         storage['lists'][createValidID(currentList)] = [];
         syncStorage();
@@ -230,17 +230,21 @@ function addList(name = '', loading = false) {
     oldInput = currentList;
 
     //  Add the current list to the table of lists
-    $('#time-table').append('<tbody id="' + currentList + '" class="time-list"></tbody>');
+    $('#time-table').append('<tbody id="' + currentList + '-named-list" class="time-list"></tbody>');
 
     //  If there is a list already there but hidden in the dropdown, allow it to be shown
-    $('a.disabled').attr('style', 'display: block');
+    $('a.disabled').parent().attr('style', 'display: block');
     $('a.disabled').removeClass("disabled");
 
     //  Add the list to the dropdown, but make it disabled
-    $('.time-dropdown-divider').before('<a class="dropdown-item time-dropdown-item disabled ' + currentList + '" href="#" style="display: none">' + getNameFromID(currentList) + '</a>');
+    $('.time-dropdown-divider').before(`<div style="display: none" class="` + currentList + `-named-list-div"><a class="dropdown-item ` +
+    `time-dropdown-item disabled ` + currentList + `-named-list" href="#">` + getNameFromID(currentList) + 
+        `</a><button type="button" class="close list-delete" onclick="openModal('Would you like to delete ` + 
+        getNameFromID(currentList) + `?', 'deleteList', '` + currentList + `')">×</button></div>`);
 
     //  Add the list to the key list dropdowns
-    $('.key-list').append('<a class="dropdown-item key-list-dropdown-item" href="#">' + getNameFromID(currentList) + '</a>');
+    $('.key-list').append(`<a class="dropdown-item key-list-dropdown-item ` + currentList + `-named-list" href="#">` + 
+    getNameFromID(currentList) + `</a>`);
 }
 
 //  Add a time to the list
@@ -290,7 +294,7 @@ function addTime(isDelayed = false, name = '', list = currentList, loading = fal
         $('.' + list).trigger("click");
 
     //  Insert the element HTML into the document
-    document.getElementById(list).insertRow(0).innerHTML = `
+    document.getElementById(list + '-named-list').insertRow(0).innerHTML = `
     <tr>
         <div class="time-element">
             <a class="time-time" href="#" onClick="seekTo(` + time + `)">` + formattedTime + `</a>
@@ -314,7 +318,7 @@ $(document).on('click', '.time-delete', function () {
     var index = row.index();
 
     // Remove the time from the storage
-    var body = storage['lists'][row.closest('tbody').attr('id')];
+    var body = storage['lists'][row.closest('tbody').attr('id').slice(0, -11)];
     var length = body.length;
     body.splice((length - 1) - index, 1);
     syncStorage();
@@ -347,7 +351,7 @@ $('#current-name').on('focusout', function () {
     storage['lists'][validInput] = storage['lists'][oldInput];
     delete storage['lists'][oldInput];
 
-    //  Fix the list keys for adding times
+    //  Replace the input name for the list keys for adding times
     if (storage['settings']['z-key-setting'] == oldInput) {
         storage['settings']['z-key-setting'] = validInput;
 
@@ -371,13 +375,19 @@ $('#current-name').on('focusout', function () {
     }
     syncStorage();
 
+    /*
+    Possible useless function now, replaced by code below
+
     $('.key-list-dropdown-item').each(function () {
         if (createValidID($(this).html()) == oldInput)
             $(this).html(input);
-    });
+    });*/
 
-    //  Set the ID of the DOM element to the new name
-    $('#' + currentList).attr("id", validInput);
+    //  Set the ID of the list table to the new id
+    $('#' + currentList + '-named-list').attr("id", validInput + '-named-list');
+
+    //  Replaces class and name of list in both normal and key dropdown
+    $('.' + currentList + '-named-list').addClass(validInput + '-named-list').removeClass(currentList + '-named-list').html(input);
 
     //  Set the name in the dropdown to the new name
     $('a.disabled').html(input);
@@ -392,10 +402,10 @@ $('#current-name').on('focusout', function () {
 //  When a person changes their current list
 $(document).on('click', '.time-dropdown-item', function () {
     //  Hide the current list
-    $('tbody[id="' + currentList + '"]').hide();
+    $('tbody[id="' + currentList + '-named-list"]').hide();
 
     //  Show the current list in the dropdown menu
-    $('a.disabled').attr('style', 'display: block');
+    $('a.disabled').parent().attr('style', 'display: block');
     $('a.disabled').removeClass("disabled");
 
     currentList = createValidID($(this).html());
@@ -403,13 +413,13 @@ $(document).on('click', '.time-dropdown-item', function () {
 
     //  Hide this list in the dropdown menu
     $(this).addClass("disabled");
-    $(this).hide();
+    $(this).parent().hide();
 
     //  Set the name in the input box to the new list name
     $('#current-name').val(getNameFromID(currentList));
 
-    //  Show the new list
-    $("[id='" + currentList + "']").show();
+    //  Show the new list's times
+    $('[id="' + currentList + '-named-list"]').show();
 });
 
 
@@ -425,7 +435,7 @@ $(document).on('focusout', '.time-name', function() {
     //  Get the time element
     var row = $(this.closest('tr'));
     var index = row.index();
-    var body = storage['lists'][row.closest('tbody').attr('id')];
+    var body = storage['lists'][row.closest('tbody').attr('id').slice(0, -11)];
     var length = body.length;
 
     //  Set the name in storage and sync it
@@ -946,6 +956,26 @@ window.onclick = function (event) {
         closeModal();
     }
 } 
+
+
+//  Delete a list with the list name as ID
+function deleteList(list) {
+    //  Remove it from storage
+    storage['lists'][list] = undefined;
+    
+    //  Delete it from zxcv key dropdown
+    $('.' + list + '-named-list').remove();
+
+    //  Delete the normal dropdown
+    $('.' + list + '-named-list-div').remove();
+
+    //  Delete it from the table of lists
+    $('#' + list + '-named-list').remove();
+
+    //  If the list is currently open (should never happen), delete it
+    if (list == currentList)
+        currentList = '';
+}
 
 
 //  Determine if video exists when clicking add list
