@@ -943,7 +943,7 @@ $('#modal-confirm-button').click(function() {
 //  Close the modals
 function closeModal() {
     $('#modal-content').html('');
-    
+
     document.getElementById('confirmation-modal').style.display = "none";
 }
 
