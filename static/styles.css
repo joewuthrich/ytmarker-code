@@ -236,6 +236,7 @@ input[type=number] {
 
 .time-dropdown-divider {
   display: none;
+  width: 100%;
 }
 
 .list-button {
@@ -254,6 +255,11 @@ input[type=number] {
   display: block;
   float: left;
   padding-right: 4em;
+}
+
+.time-dropdown-item {
+  width: 77%;
+  float: left;
 }
 
 .list-delete {
