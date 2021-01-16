@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /saved
+Disallow: /confirm_email
+Disallow: /forgot_password
+Sitemap: https://www.ytmarker.com/sitemap.xml

@@ -987,6 +987,10 @@ function addListKey() {
 }
 
 
+//  Close the footer
+function hideFooter() { $('.footer').attr("style", "display:none !important;") }
+
+
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)
 function createValidID(id) {
     return id.replace(/ /g, '⛕');
