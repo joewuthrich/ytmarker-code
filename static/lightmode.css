@@ -199,14 +199,14 @@ body.enabled .autofocus-enabled {
         color: var(--item-text-color) !important;
     }
 
-.modal-content {
+body.enabled .modal-content {
     background-color: var(--item-bg-color);
     box-shadow: 7px 10px var(--shadow-color);
 }
 
-.btn-outline-danger {
-    border-left: 3px solid var(--item-bg-color) !important;
-}
+body.enabled .footer-text {
+    color: var(--item-text-color);
+  }
 
 @media (max-width: 900px) {
     body.enabled .small-head-container {

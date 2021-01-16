@@ -365,7 +365,7 @@ input[type=number] {
 .modal-outer {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 3; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -409,6 +409,26 @@ input[type=number] {
         top: 0;
         opacity: 1
     }
+}
+
+.pointer-hover {
+  cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  z-index: 4;
+}
+
+.footer-text {
+  color: #b5b5b5;
+  float: left;
+  width: 98%;
+}
+
+.footer-close {
+  float: right;
 }
 
 @media (max-width: 900px) {

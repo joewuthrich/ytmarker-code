@@ -1,8 +1,7 @@
 ﻿{% extends "layout.html" %}
 
-{% block title %}
-    Videos
-{% endblock %}
+{% block title %}Saved Videos{% endblock %}
+{% block desc %}Access your saved videos, if you have a YTMarker account.{% endblock %}
 
 {% block scripts %}
     <script src="/static/index.js" type="text/javascript"></script>
@@ -27,12 +26,12 @@
         <div class="saved-video-row d-flex flex-row justify-content-around">
             {% for video in videos %}
             <div class="mx-auto">
-                <a class="link-saved-video" data-toggle="tooltip" title="Click to copy" data-placement="top" href="#">www.ytmarker.com/video/{{video['uuid']}}</a>
-                <a onclick="loadVideoFromSaved({{video['info']}});" href="#">
+                <span class="link-saved-video pointer-hover" data-toggle="tooltip" title="Click to copy" data-placement="top">www.ytmarker.com/video/{{video['uuid']}}</a>
+                <span onclick="loadVideoFromSaved({{video['info']}});" class="pointer-hover">
                     <div class="saved-video-element mx-auto">
                         <img class="saved-video-thumbnail" src="http://img.youtube.com/vi/{{video['id']}}/maxresdefault.jpg" alt="Thumbnail" />
                         <br />
-                        <a class="delete-saved-video" href="#" onclick="deleteVideo({{video['info']}});" style="float: none">Delete Video</a>
+                        <span class="delete-saved-video pointer-hover" onclick="openModal('Would you like to delete www.ytmarker.com/video/{{video['uuid']}}?', 'deleteVideo', {{video['info']}}) " style="float: none">Delete Video</span>
                     </div>
                 </a>
             </div>
