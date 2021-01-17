@@ -55,6 +55,8 @@ $(document).ready(function () {
         if (!document.body.classList.contains("enabled"))
             document.body.classList.add("enabled");
     }
+
+    resizeWindow();
 });
 
 
@@ -894,7 +896,9 @@ function toggleDarkMode() {
 
 
 //  Resort the menus so they they fit on the screen for both wide and narrow screens
-$(window).resize(function () {
+$(window).resize(function () { resizeWindow(); });
+
+function resizeWindow() {
     //  If the window is smaller than 900px (matches @media query for css)
     if (window.innerWidth < 900) {
         //  If the menus are not place for the screen size
@@ -903,6 +907,7 @@ $(window).resize(function () {
             $('#big-menus > .menus').each(function () {
                 $(this).detach().appendTo('#small-menus');
             });
+            $('.settings-menu').removeClass('dropdown-menu-right');
         }
     }
     else {
@@ -910,10 +915,10 @@ $(window).resize(function () {
             $('#small-menus > .menus').each(function () {
                 $(this).detach().appendTo('#big-menus');
             });
+            $('.settings-menu').addClass('dropdown-menu-right');
         }
     }
-});
-
+}
 
 //  Open the modal with custom confirmation dialogue
 function openModal(text, callFunction, arg) {

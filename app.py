@@ -6,7 +6,7 @@ import uuid
 import json
 
 from . import config
-from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup
+from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -39,6 +39,14 @@ mail = Mail()
 mail.init_app(app)
 
 s = URLSafeTimedSerializer(config.SECRET_KEY)
+
+
+#   Return robots.txt and sitemap.xml
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
+
 
 #   Return the basic index template
 @app.route('/')
