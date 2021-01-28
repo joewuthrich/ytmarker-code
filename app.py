@@ -604,3 +604,22 @@ def premium():
 
 if __name__ == '__main__':
     app.debug = True
+
+@app.route('/isPremium')
+def isPremium():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+        '_user_id': session['id']
+        }
+
+    query = 'SELECT premium FROM users WHERE user_id = %(_user_id)s'
+
+    cur.execute(query, params)
+    data = cur.fetchall()
+
+    if (data[0] == True):
+        return True
+
+    return False

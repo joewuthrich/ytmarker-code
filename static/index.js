@@ -451,10 +451,16 @@ $(document).on('focusout', '#delayed-setting', function() {
     //  Get the input from the input box
     var input = document.getElementById('delayed-setting');
 
-    //  If the input is tagged as invalid (less than 1 or more than 20) set it to 1
+    //  If the input is tagged as invalid (less than 1 or more than 20) set it to 5
     if (!input.validity.valid) {
-        $(this).val('1');
+        $(this).val('5');
     }
+
+    //  If the person does not have premium
+    $.get("/isPremium", function (premium) {
+        if (!premium)
+            return;
+    });
 
     //  Set storage
     storage['settings']["delayed-setting"] = input.value;
