@@ -465,13 +465,17 @@ def save():
             data-placement="top" href="#">www.ytmarker.com/video/' + saved['uuid'] + '</a> updated'))
             return ''
 
+    #   If they have two videos saved already and arn't a premium member
+    query = 'SELECT premium FROM users WHERE user_id = %(_user_id)s'
+    cur.execute(query, params)
+    isPremium = cur.fetchall()
 
-    if len(data) >= 2:
+    if len(data) >= 2 and isPremium == False:
         flash(Markup('You already have two videos saved - upgrade to <a class="dropdown-item" href="/premium">\
         <span style="color: gold">premium here</span></a> to save unlimited!'))
         return ''
 
-    #   Insert into database
+    #   While the uuid is already in use (loop breaks when it isn't)
     while True:
         uid = str(uuid.uuid4())[:11]
 
@@ -484,7 +488,10 @@ def save():
         cur.execute(query, params)
         data = cur.fetchall()
 
+        #   Checck if the uuid is already in use
         if (len(data) == 0):
+            
+            #   Insert video into database
             params = {
                 '_uuid': uid,
                 '_user_id': session['id'],
