@@ -38,7 +38,7 @@
                                     <div class="form-group">
                                         <label for="delayed-setting">Delayed button delay:</label>
                                         <div class="input-group">
-                                            <input class="form-control" id="delayed-setting" type="number" value="5">
+                                            <input class="form-control" id="delayed-setting" type="number" value="5" {% if not premium %}disabled data-toggle="tooltip" title="You need premium to change this" data-placement="top" aria-label="You need premium to change this"{% endif %}>
                                             <div class="input-group-append">
                                                 <span class="input-group-text delayed-settings-append">seconds</span>
                                             </div>

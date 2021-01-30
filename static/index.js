@@ -456,11 +456,16 @@ $(document).on('focusout', '#delayed-setting', function() {
         $(this).val('5');
     }
 
-    //  If the person does not have premium
+    /*  If the person does not have premium
     $.get("/isPremium", function (premium) {
         if (!premium)
             return;
-    });
+    });*/
+
+    $.ajax({url: "/isPremium", success: function(premium) {
+        if (!premium)
+            return;
+    }});
 
     //  Set storage
     storage['settings']["delayed-setting"] = input.value;

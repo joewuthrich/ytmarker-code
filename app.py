@@ -52,7 +52,7 @@ def static_from_root():
 @app.route('/')
 def index():
     if session:
-        return render_template('index.html', session=session)
+        return render_template('index.html', session=session, premium=isPremium())
     else:
         return render_template('index.html')
 
