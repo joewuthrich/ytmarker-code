@@ -602,24 +602,34 @@ def premium():
     <a class="time-time" href="https://www.instagram.com/joewuthrich/" style="padding-right: 0%">@joewuthrich</a> I may be able give you a month for free.'))
     return redirect('/')
 
-if __name__ == '__main__':
-    app.debug = True
 
-@app.route('/isPremium')
+#   Call the isPremium function through a link
+@app.route('/getIsPremium')
+def getIsPremium():
+    premium = isPremium()
+    if premium:
+        return 'True'
+    else:
+        return 'False'
+
+#   Check if the user is premium
 def isPremium():
     con = mysql.connection
     cur = con.cursor()
 
     params = {
-        '_user_id': session['id']
+            '_user_id': session['id']
         }
 
-    query = 'SELECT premium FROM users WHERE user_id = %(_user_id)s'
+    query = 'SELECT premium FROM users WHERE id = %(_user_id)s'
 
     cur.execute(query, params)
     data = cur.fetchall()
 
-    if (data[0] == True):
+    if (data[0]['premium'] == 1):
         return True
+    else:
+        return False
 
-    return False
+if __name__ == '__main__':
+    app.debug = True

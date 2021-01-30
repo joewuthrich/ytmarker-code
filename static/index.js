@@ -377,14 +377,6 @@ $('#current-name').on('focusout', function () {
     }
     syncStorage();
 
-    /*
-    Possible useless function now, replaced by code below
-
-    $('.key-list-dropdown-item').each(function () {
-        if (createValidID($(this).html()) == oldInput)
-            $(this).html(input);
-    });*/
-
     //  Set the ID of the list table to the new id
     $('#' + currentList + '-named-list').attr("id", validInput + '-named-list');
 
@@ -456,16 +448,15 @@ $(document).on('focusout', '#delayed-setting', function() {
         $(this).val('5');
     }
 
-    /*  If the person does not have premium
-    $.get("/isPremium", function (premium) {
-        if (!premium)
-            return;
-    });*/
-
-    $.ajax({url: "/isPremium", success: function(premium) {
-        if (!premium)
-            return;
-    }});
+    //  If the person is not premium
+    $.ajax({
+        type: 'GET',
+        url: '/getIsPremium',
+        success: function (premium) {
+            console.log(premium);
+            if (premium == 'False') 
+                return;
+        }});
 
     //  Set storage
     storage['settings']["delayed-setting"] = input.value;
