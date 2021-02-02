@@ -27,7 +27,6 @@ var storage = {
         "z-key-delay": 'false',
         "x-key-delay": 'false',
         "c-key-delay": 'false',
-        "v-key-delay": 'false'
     }
 };
 
@@ -484,9 +483,7 @@ $(document).keypress(function (event) {
     else if (event.key.toUpperCase() === 'C') {
         addTimeWithKey('c')
     }
-    else if (event.key.toUpperCase() === 'V') {
-        addTimeWithKey('v')
-    }
+
     return;
 });
 
@@ -662,7 +659,7 @@ function loadVideo(info = '') {
     if (storage['settings']['focus-time-setting'] == 'true')
         $('#focus-time-setting').addClass('autofocus-enabled');
 
-    keys = ['z', 'x', 'c', 'v']
+    keys = ['z', 'x', 'c']
 
     for (var key in keys) {
         $('#' + keys[key] + '-key-setting').val(getNameFromID(storage['settings'][keys[key] + '-key-setting']));
@@ -705,7 +702,7 @@ function deleteOldVideo(blank = false) {
         $(this).remove();
     });
 
-    keys = ['z','x','c','v']
+    keys = ['z','x','c']
 
     for (var key in keys) {
         $('#' + keys[key] + '-key-setting').val('');
@@ -739,7 +736,6 @@ function deleteOldVideo(blank = false) {
         "z-key-delay": 'false',
         "x-key-delay": 'false',
         "c-key-delay": 'false',
-        "v-key-delay": 'false'
     };
 
     listNum = 0;
