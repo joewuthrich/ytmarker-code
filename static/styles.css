@@ -431,6 +431,13 @@ input[type=number] {
   float: right;
 }
 
+.key-list-selected {
+  color: #919191;
+  font-weight: bold;
+  pointer-events: none;
+  background-color: #2e2d2d;
+}
+
 @media (max-width: 900px) {
     .new-video-button {
         border-top-right-radius: 4px !important;

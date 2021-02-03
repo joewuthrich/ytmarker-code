@@ -38,85 +38,86 @@
                                     <div class="form-group">
                                         <label for="delayed-setting">Delayed button delay:</label>
                                         <div class="input-group">
-                                            <input class="form-control" id="delayed-setting" type="number" value="5">
+                                            <input
+                                             class="form-control" id="delayed-setting" type="number" value="5" {% if not premium %}disabled data-toggle="tooltip" title="You need premium to change this" data-placement="left" aria-label="You need premium to change this"{% endif %}>
                                             <div class="input-group-append">
                                                 <span class="input-group-text delayed-settings-append">seconds</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="dropdown-divider"></div>
+                                    {% if not premium %}
                                     <div class="form-group">
-                                        <label for="z-key-setting">Add list for z key:</label>
+                                        <label for="KeyZ-key-setting">Add list for z key:</label>
                                         <div class="dropdown show btn-group d-flex justify-content-center">
                                             <div class="input-group mt-1 mb-1 list-button">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
-                                                        <input type="checkbox" class="checkbox" id="z-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                                        <input type="checkbox" class="checkbox" id="KeyZ-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
                                                     </div>
                                                 </div>
-                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="z-key-setting" readonly>
+                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="KeyZ-key-setting" readonly>
                                                 <div class="input-group-append ">
-                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="z-key-setting" data-toggle="dropdown"></button>
-                                                    <div class="dropdown-menu dropdown-menu-right z-key-dropdown-menu key-list">
+                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="KeyZ-key-setting" data-toggle="dropdown"></button>
+                                                    <div class="dropdown-menu dropdown-menu-right KeyZ-key-dropdown-menu key-list">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="x-key-setting">Add list for x key:</label>
+                                        <label for="KeyX-key-setting">Add list for x key:</label>
                                         <div class="dropdown show btn-group d-flex justify-content-center">
                                             <div class="input-group mt-1 mb-1 list-button">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
-                                                        <input type="checkbox" class="checkbox" id="x-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                                        <input type="checkbox" class="checkbox" id="KeyX-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
                                                     </div>
                                                 </div>
-                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="x-key-setting" readonly>
+                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="KeyX-key-setting" readonly>
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="x-key-dropdown" data-toggle="dropdown"></button>
-                                                    <div class="dropdown-menu dropdown-menu-right x-key-dropdown-menu key-list">
+                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="KeyX-key-dropdown" data-toggle="dropdown"></button>
+                                                    <div class="dropdown-menu dropdown-menu-right KeyX-key-dropdown-menu key-list">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="c-key-setting">Add list for c key:</label>
+                                        <label for="KeyC-key-setting">Add list for c key:</label>
                                         <div class="dropdown show btn-group d-flex justify-content-center">
                                             <div class="input-group mt-1 mb-1 list-button">
                                                 <div class="input-group-prepend">
                                                     <div class="input-group-text">
-                                                        <input type="checkbox" class="checkbox" id="c-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                                        <input type="checkbox" class="checkbox" id="KeyC-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
                                                     </div>
                                                 </div>
-                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="c-key-setting" readonly>
+                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="KeyC-key-setting" readonly>
                                                 <div class="input-group-append">
-                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="c-key-dropdown" data-toggle="dropdown"></button>
-                                                    <div class="dropdown-menu dropdown-menu-right c-key-dropdown-menu key-list">
+                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="KeyC-key-dropdown" data-toggle="dropdown"></button>
+                                                    <div class="dropdown-menu dropdown-menu-right KeyC-key-dropdown-menu key-list">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="v-key-setting">Add list for v key:</label>
-                                        <div class="dropdown show btn-group d-flex justify-content-center">
-                                            <div class="input-group mt-1 mb-1 list-button">
-                                                <div class="input-group-prepend">
-                                                    <div class="input-group-text">
-                                                        <input type="checkbox" class="checkbox" id="v-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
-                                                    </div>
+                                    {% else %}
+                                    <div class="dropdown show btn-group d-flex justify-content-center">
+                                        <div class="input-group mt-1 mb-1 list-button">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <input type="checkbox" class="checkbox" id="all-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
                                                 </div>
-                                                <input autocomplete="off" class="form-control" placeholder="List Name" type="text" value="" id="v-key-setting" readonly>
-                                                <div class="input-group-append">
-                                                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="v-key-dropdown" data-toggle="dropdown"></button>
-                                                    <div class="dropdown-menu dropdown-menu-right v-key-dropdown-menu key-list">
-                                                    </div>
+                                            </div>
+                                            <input autocomplete="off" autofocus class="form-control" placeholder="Key Name" type="text" value="" id="key-list-current-setting">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="all-key-dropdown" data-toggle="dropdown"></button>
+                                                <div class="dropdown-menu dropdown-menu-right all-key-dropdown-menu key-list">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -144,7 +145,7 @@
                                 <div class="px-3 py-1">
                                     <a class="dropdown-item" href="/saved">Saved videos</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="/premium"><span style="color: gold">Upgrade to Premium</span></a>
+                                    {% if not premium %}<a class="dropdown-item" href="/premium"><span style="color: gold">Upgrade to Premium</span></a>{% endif %}
                                     <a class="dropdown-item" href="/logout">Log Out</a>
                                 </div>
                             </div>

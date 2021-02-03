@@ -52,7 +52,7 @@ def static_from_root():
 @app.route('/')
 def index():
     if session:
-        return render_template('index.html', session=session)
+        return render_template('index.html', session=session, premium=isPremium())
     else:
         return render_template('index.html')
 
@@ -465,13 +465,17 @@ def save():
             data-placement="top" href="#">www.ytmarker.com/video/' + saved['uuid'] + '</a> updated'))
             return ''
 
+    #   If they have two videos saved already and arn't a premium member
+    query = 'SELECT premium FROM users WHERE user_id = %(_user_id)s'
+    cur.execute(query, params)
+    isPremium = cur.fetchall()
 
-    if len(data) >= 2:
+    if len(data) >= 2 and isPremium == False:
         flash(Markup('You already have two videos saved - upgrade to <a class="dropdown-item" href="/premium">\
         <span style="color: gold">premium here</span></a> to save unlimited!'))
         return ''
 
-    #   Insert into database
+    #   While the uuid is already in use (loop breaks when it isn't)
     while True:
         uid = str(uuid.uuid4())[:11]
 
@@ -484,7 +488,10 @@ def save():
         cur.execute(query, params)
         data = cur.fetchall()
 
+        #   Checck if the uuid is already in use
         if (len(data) == 0):
+            
+            #   Insert video into database
             params = {
                 '_uuid': uid,
                 '_user_id': session['id'],
@@ -594,6 +601,35 @@ def premium():
     flash(Markup('You cannot currently upgrade to premium, but if you DM me on Instagram \
     <a class="time-time" href="https://www.instagram.com/joewuthrich/" style="padding-right: 0%">@joewuthrich</a> I may be able give you a month for free.'))
     return redirect('/')
+
+
+#   Call the isPremium function through a link
+@app.route('/getIsPremium')
+def getIsPremium():
+    premium = isPremium()
+    if premium:
+        return 'True'
+    else:
+        return 'False'
+
+#   Check if the user is premium
+def isPremium():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+            '_user_id': session['id']
+        }
+
+    query = 'SELECT premium FROM users WHERE id = %(_user_id)s'
+
+    cur.execute(query, params)
+    data = cur.fetchall()
+
+    if (data[0]['premium'] == 1):
+        return True
+    else:
+        return False
 
 if __name__ == '__main__':
     app.debug = True
