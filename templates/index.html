@@ -46,6 +46,7 @@
                                         </div>
                                     </div>
                                     <div class="dropdown-divider"></div>
+                                    {% if not premium %}
                                     <div class="form-group">
                                         <label for="z-key-setting">Add list for z key:</label>
                                         <div class="dropdown show btn-group d-flex justify-content-center">
@@ -100,6 +101,23 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% else %}
+                                    <div class="dropdown show btn-group d-flex justify-content-center">
+                                        <div class="input-group mt-1 mb-1 list-button">
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">
+                                                    <input type="checkbox" class="checkbox" id="all-key-delay" data-toggle="tooltip" title="Delayed?" data-placement="left" aria-label="Is this a delay">
+                                                </div>
+                                            </div>
+                                            <input autocomplete="off" autofocus class="form-control" placeholder="Key Name" type="text" value="" id="key-list-current">
+                                            <div class="input-group-append">
+                                                <button type="button" class="btn btn-outline-secondary dropdown-toggle" id="all-key-dropdown" data-toggle="dropdown"></button>
+                                                <div class="dropdown-menu dropdown-menu-right all-key-dropdown-menu key-list">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
