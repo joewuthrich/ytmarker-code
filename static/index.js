@@ -20,13 +20,13 @@ var storage = {
     settings: {
         "delayed-setting": "5",
         "focus-time-setting": "true",
-        "z-key-setting": "",
-        "x-key-setting": "",
-        "c-key-setting": "",
-        "v-key-setting": "",
-        "z-key-delay": 'false',
-        "x-key-delay": 'false',
-        "c-key-delay": 'false',
+        "KeyZ-key-setting": "",
+        "KeyX-key-setting": "",
+        "KeyC-key-setting": "",
+        "KeyZ-key-delay": 'false',
+        "KeyX-key-delay": 'false',
+        "KeyC-key-delay": 'false',
+        "key-list-current-setting": 'KeyZ'
     }
 };
 
@@ -353,26 +353,16 @@ $('#current-name').on('focusout', function () {
     delete storage['lists'][oldInput];
 
     //  Replace the input name for the list keys for adding times
-    if (storage['settings']['z-key-setting'] == oldInput) {
-        storage['settings']['z-key-setting'] = validInput;
+    var keys = Object.keys(storage['settings']);
 
-        document.getElementById('z-key-setting').value = input;
-    }
+    for (key in keys){
+        if ('key-setting' in key) {
+            if (storage['settings'][key] == oldInput) {
+                storage['settings'][key] = validInput;
 
-    if (storage['settings']['x-key-setting'] == oldInput){
-        storage['settings']['x-key-setting'] = validInput;
-
-        document.getElementById('x-key-setting').value = input;
-    }
-    if (storage['settings']['c-key-setting'] == oldInput){
-        storage['settings']['c-key-setting'] = validInput;
-
-        document.getElementById('c-key-setting').value = input;
-    }
-    if (storage['settings']['v-key-setting'] == oldInput){
-        storage['settings']['v-key-setting'] = validInput;
-
-        document.getElementById('v-key-setting').value = input;
+                document.getElementById(key).value = input;
+            }
+        }
     }
     syncStorage();
 
@@ -473,18 +463,11 @@ $(document).keypress(function (event) {
     if (player.getVideoData()['video_id'] === undefined)
         return;
 
-    //  If the key matches one of the keys
-    if (event.key.toUpperCase() === 'Z') {
-        addTimeWithKey('z')
-    }
-    else if (event.key.toUpperCase() === 'X') {
-        addTimeWithKey('x')
-    }
-    else if (event.key.toUpperCase() === 'C') {
-        addTimeWithKey('c')
-    }
+    //  Add time to key if it exists
+    var keys = Object.keys(storage['settings']);
 
-    return;
+    if (event.code + '-key-setting' in keys) 
+        addTimeWithKey(event.code);
 });
 
 
@@ -521,16 +504,17 @@ $(document).keydown(function (event) {
 }); 
 
 
-function addTimeWithKey(key) {
+//  Add a time with a key
+function addTimeWithKey(keyCode) {
 
     //  Add the animation and the time to the list
     listAnimation();
 
-    if (storage['settings'][key + '-key-delay'] == 'true') {
-        addTime(true, '', storage['settings'][key + '-key-setting']);
+    if (storage['settings'][keyCode + '-key-delay'] == 'true') {
+        addTime(true, '', storage['settings'][keyCode + '-key-setting']);
     }
     else
-        addTime(false, '', storage['settings'][key + '-key-setting']);
+        addTime(false, '', storage['settings'][keyCode + '-key-setting']);
 }
 
 
@@ -659,13 +643,15 @@ function loadVideo(info = '') {
     if (storage['settings']['focus-time-setting'] == 'true')
         $('#focus-time-setting').addClass('autofocus-enabled');
 
-    keys = ['z', 'x', 'c']
+    var keys = Object.keys(storage['settings']);
 
-    for (var key in keys) {
-        $('#' + keys[key] + '-key-setting').val(getNameFromID(storage['settings'][keys[key] + '-key-setting']));
+    for (key in keys) {
+        if ('key-setting' in key) {
+            $('#' + key).val(getNameFromID(storage['settings'][key + '-key-setting']));
 
-        if (storage['settings'][keys[key] + '-key-delay'] == 'true')
-            $('#' + keys[key] + '-key-delay').prop('checked', true);
+            if (storage['settings'][key + '-key-delay'] == 'true')
+                $('#' + key + '-key-delay').prop('checked', true);
+        }
     }
 }
 
@@ -846,27 +832,56 @@ $(document).on('click', '.link-saved-video', function () {
 });
 
 
+//  Register the input of a key for premium key list seclections
+$(document).on('keypress', 'key-list-current', function (event) {
+    //  Unfocus the input
+    $(this).blur();
+
+    //  Get the code
+    var code = event.code;
+
+    //  Change the input to the keycode
+    $(this).val(code);
+
+    //  Update the settings
+    storage['settings']['key-list-current'] = code;
+    syncStorage();
+});
+
+
 //  Change the list for a key
 $(document).on('click', '.key-list-dropdown-item', function () {
     var key = $(this).closest('.input-group').find('input').last().attr('id');
 
-    $(this).closest('.input-group').find('input').last().val($(this).html());
+    //  If they don't have premium
+    if (!(key === 'key-list-current')) {
+        $(this).closest('.input-group').find('input').last().val($(this).html());
 
-    storage['settings'][key] = createValidID($(this).html());
-    syncStorage();
+        storage['settings'][key] = createValidID($(this).html());
+        syncStorage();
+    } 
+    else {
+        //  Remove highlight around old link
+        $('.key-list-selected').removeClass('key-list-selected');
+        
+        //  Update storage
+        storage['settings'][key + '-key-setting'] = createValidID($(this).html());
+        syncStorage();
+
+        //  Add highlight to currently selectd item
+        $(this).addClass('key-list-selected');
+    }
 });
 
 
 //  Update the storage when a delay checkbox is ticked
 $(".checkbox").change(function () {
 
-    //  Change the storage - using string rather than bool as it will all have to be tranformed to string anyway
-    if (this.checked) {
-        storage["settings"][$(this).attr('id')] = 'true';
-    }
-    else {
-        storage["settings"][$(this).attr('id')] = 'false';
-    }
+    //  Update the storage based on if they're using premium or not
+    if ($(this).attr('id') == 'all-key-delay')
+        storage["settings"][storage["settings"]["key-list-current-setting"] + "-key-delay"] = this.checked.toString();
+    else
+        storage["settings"][$(this).attr('id')] = this.checked.toString();
 
     syncStorage();
 });

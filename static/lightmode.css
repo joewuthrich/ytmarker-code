@@ -162,7 +162,7 @@ body.enabled .dropdown-item {
     color: #5c5c5c;
 }
 
-    body.enabled .dropdown-item:hover, body.enabled .dropdown-item:focus {
+    body.enabled .dropdown-item:hover, body.enabled .dropdown-item:focus, body.enabled .key-list-selected {
         color: var(--item-text-color);
         background-color: var(--form-bg-color);
     }
@@ -206,7 +206,7 @@ body.enabled .modal-content {
 
 body.enabled .footer-text {
     color: var(--item-text-color);
-  }
+}
 
 @media (max-width: 900px) {
     body.enabled .small-head-container {
