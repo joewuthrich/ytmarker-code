@@ -4,9 +4,10 @@
 #   Import things
 import uuid
 import json
+import stripe
 
 from . import config
-from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory
+from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory, jsonify
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -40,6 +41,7 @@ mail.init_app(app)
 
 s = URLSafeTimedSerializer(config.SECRET_KEY)
 
+stripe.api_key = config.STRIPE_SECRET_KEY
 
 #   Return robots.txt and sitemap.xml
 @app.route('/robots.txt')
@@ -625,5 +627,20 @@ def isPremium():
     else:
         return False
 
+def calculate_order_amount(items):
+    return 500
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment():
+    try:
+        data = json.loads(request.data)
+
+        intent = stripe.PaymentIntent.create(amount=calculate_order_amount(data['items']), currency='usd')
+
+        return jsonify({'clientSecret': intent['client_secret']})
+
+    except Exception as e:
+        return jsonify(error=str(e)), 403
+
 if __name__ == '__main__':
-    app.debug = True
+    app.run()
