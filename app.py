@@ -627,20 +627,33 @@ def isPremium():
     else:
         return False
 
-def calculate_order_amount(items):
-    return 500
 
-@app.route('/create-payment-intent', methods=['POST'])
-def create_payment():
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    data = json.loads(request.data)
+
     try:
-        data = json.loads(request.data)
-
-        intent = stripe.PaymentIntent.create(amount=calculate_order_amount(data['items']), currency='usd')
-
-        return jsonify({'clientSecret': intent['client_secret']})
-
+        # See https://stripe.com/docs/api/checkout/sessions/create
+        # for additional parameters to pass.
+        # {CHECKOUT_SESSION_ID} is a string literal; do not change it!
+        # the actual Session ID is returned in the query parameter when your customer
+        # is redirected to the success page.
+        checkout_session = stripe.checkout.Session.create(
+            success_url="https://ytmarker.com/success?session_id={CHECKOUT_SESSION_ID}",
+            cancel_url="https://ytmarker.com/canceled",
+            payment_method_types=["card"],
+            mode="subscription",
+            line_items=[
+                {
+                    "price": data['priceId'],
+                    # For metered billing, do not pass quantity
+                    "quantity": 1
+                }
+            ],
+        )
+        return jsonify({'sessionId': checkout_session['id']})
     except Exception as e:
-        return jsonify(error=str(e)), 403
+        return jsonify({'error': {'message': str(e)}}), 400
 
 if __name__ == '__main__':
-    app.run()
+    app.debug = True
