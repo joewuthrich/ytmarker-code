@@ -21,7 +21,9 @@ var storage = {
         "delayed-setting": "5",
         "focus-time-setting": "true",
         "key-list-current-setting": 'KeyZ'
-    }
+    },
+    darkmode: 'true',
+    footer: 'true'
 };
 
 
@@ -38,8 +40,11 @@ $(document).ready(function () {
         storage = JSON.parse(sessionStorage.getItem('video'));
     }
 
+    if (storage['footer'] == 'false')
+        $('.footer').attr("style", "display:none !important;") 
+
     //  Dark mode on page load if the browser is in dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storage['darkmode'] == 'true') {
         if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
     }
@@ -924,6 +929,14 @@ function autofocusTime() {
 //  Toggle dark mode on or off
 function toggleDarkMode() {
     document.body.classList.toggle("enabled");
+
+    //  Fix the storage
+    if (storage['darkmode'] == 'true')
+        storage['darkmode'] = 'false';
+    else
+        storage['darkmode'] = 'true';
+
+    syncStorage();
 }
 
 
@@ -1025,7 +1038,11 @@ function addListKey() {
 
 
 //  Close the footer
-function hideFooter() { $('.footer').attr("style", "display:none !important;") }
+function hideFooter() { 
+    $('.footer').attr("style", "display:none !important;") 
+
+    storage['footer'] = 'false';
+}
 
 
 //  Create a valid ID from a name or get a name from an ID (spaces can't be used in ID name)

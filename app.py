@@ -466,11 +466,7 @@ def save():
             return ''
 
     #   If they have two videos saved already and arn't a premium member
-    query = 'SELECT premium FROM users WHERE user_id = %(_user_id)s'
-    cur.execute(query, params)
-    isPremium = cur.fetchall()
-
-    if len(data) >= 2 and isPremium == False:
+    if len(data) >= 2 and isPremium() == False:
         flash(Markup('You already have two videos saved - upgrade to <a class="dropdown-item" href="/premium">\
         <span style="color: gold">premium here</span></a> to save unlimited!'))
         return ''
