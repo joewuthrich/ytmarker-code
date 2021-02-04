@@ -7,7 +7,7 @@ import json
 import stripe
 
 from . import config
-from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory, jsonify
+from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory, jsonify, render_template_string
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -641,7 +641,7 @@ def create_checkout_session():
         # is redirected to the success page.
         checkout_session = stripe.checkout.Session.create(
             success_url="https://ytmarker.com/success?session_id={CHECKOUT_SESSION_ID}",
-            cancel_url="https://ytmarker.com/canceled",
+            cancel_url="https://ytmarker.com/premium",
             payment_method_types=["card"],
             mode="subscription",
             line_items=[
@@ -654,6 +654,15 @@ def create_checkout_session():
         return jsonify({'sessionId': checkout_session['id']})
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
+
+
+#   Stripe success route
+@app.route('/success', methods=['GET'])
+def order_success():
+  session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
+  customer = stripe.Customer.retrieve(session.customer)
+
+  return render_template_string('<html><body><h1>Thanks for your order, {{customer.name}}!</h1></body></html>')
 
 if __name__ == '__main__':
     app.debug = True

@@ -17,7 +17,7 @@ var createCheckoutSession = function(priceId) {
 document
   .getElementById("checkout")
   .addEventListener("click", function(evt) {
-    createCheckoutSession('price_1IGduWG7d9GmhCkUjm1pl8My').then(function(data) {
+    createCheckoutSession('price_1IH4bQG7d9GmhCkUxEwBw2Gm').then(function(data) {
       // Call Stripe.js method to redirect to the new Checkout page
       stripe
         .redirectToCheckout({
