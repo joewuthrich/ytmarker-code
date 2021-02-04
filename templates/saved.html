@@ -25,17 +25,26 @@
     <div class="saved-video-column d-flex flex-column">
         <div class="saved-video-row d-flex flex-row justify-content-around">
             {% for video in videos %}
-            <div class="mx-auto">
-                <span class="link-saved-video pointer-hover" data-toggle="tooltip" title="Click to copy" data-placement="top">www.ytmarker.com/video/{{video['uuid']}}</a>
+            <div class="mx-auto saved-video-item">
+                <span class="link-saved-video pointer-hover" data-toggle="tooltip" title="Click to copy" data-placement="top">www.ytmarker.com/video/{{video['uuid']}}</span>
                 <span onclick="loadVideoFromSaved({{video['info']}});" class="pointer-hover">
                     <div class="saved-video-element mx-auto">
-                        <img class="saved-video-thumbnail" src="http://img.youtube.com/vi/{{video['id']}}/maxresdefault.jpg" alt="Thumbnail" />
-                        <br />
-                        <span class="delete-saved-video pointer-hover" onclick="openModal('Would you like to delete www.ytmarker.com/video/{{video['uuid']}}?', 'deleteVideo', {{video['info']}}) " style="float: none">Delete Video</span>
+                        <img class="saved-video-thumbnail" src="http://img.youtube.com/vi/{{video['id']}}/hqdefault.jpg" alt="Thumbnail" />
                     </div>
-                </a>
+                </span>
+                <span class="delete-saved-video pointer-hover" onclick="openModal('Would you like to delete www.ytmarker.com/video/{{video['uuid']}}?', 'deleteVideo', {{video['info']}}) " style="float: none">Delete Video</span>
             </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal-outer" id="confirmation-modal">
+        <div class="modal-content">
+            <p id="modal-content"></p>
+            <div class="btn-group">
+                <button class="btn-outline-success btn" id="modal-confirm-button">Yes</button>
+                <button class="btn-outline-danger btn" id="modal-reject-button" onclick="closeModal();">No</button>
+            </div>
         </div>
     </div>
 </div>

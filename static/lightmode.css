@@ -90,11 +90,19 @@ body.enabled .time-delete {
     }
 
 body.enabled .delete-saved-video {
-    color: #3b0909;
+    color: lightcoral;
 }
 
     body.enabled .delete-saved-video:hover {
-        color: #2b0707;
+        color: orangered;
+    }
+
+body.enabled .link-saved-video {
+    color:#a1d6d3;
+    }
+    
+    body.enabled .link-saved-video:hover {
+        color: #63c2bd;
     }
 
 body.enabled .btn-secondary, body.enabled .btn-secondary:visited {
@@ -206,6 +214,10 @@ body.enabled .modal-content {
 
 body.enabled .footer-text {
     color: var(--item-text-color);
+}
+
+body.enabled .saved-video-item {
+    background-color: var(--form-bg-color);
 }
 
 @media (max-width: 900px) {
