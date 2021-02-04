@@ -118,3 +118,9 @@
 .close:hover {
 	color: #919191;
 }
+
+.card {
+	width: 18rem;
+	background-color: #262626;
+	margin: auto;
+}

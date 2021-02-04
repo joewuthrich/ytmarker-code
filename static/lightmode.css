@@ -111,7 +111,7 @@ body.enabled .btn-secondary, body.enabled .btn-secondary:visited {
 }
 
     body.enabled .btn-secondary:hover, body.enabled .btn-secondary:focus, body.enabled .btn-secondary:active {
-        color: var(--form-bg-color-hover) !important;
+        color: var(--item-text-color) !important;
         background-color: var(--form-bg-color-hover) !important;
     }
 
@@ -218,6 +218,10 @@ body.enabled .footer-text {
 
 body.enabled .saved-video-item {
     background-color: var(--form-bg-color);
+}
+
+body.enabled .card {
+    background-color: #fff;
 }
 
 @media (max-width: 900px) {
