@@ -628,6 +628,7 @@ def isPremium():
         return False
 
 
+#   Stripe routes
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
     data = json.loads(request.data)
@@ -646,7 +647,6 @@ def create_checkout_session():
             line_items=[
                 {
                     "price": data['priceId'],
-                    # For metered billing, do not pass quantity
                     "quantity": 1
                 }
             ],
