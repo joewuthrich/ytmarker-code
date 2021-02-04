@@ -594,9 +594,7 @@ def video(token):
 #   Premium (temporary)
 @app.route('/premium')
 def premium():
-    flash(Markup('You cannot currently upgrade to premium, but if you DM me on Instagram \
-    <a class="time-time" href="https://www.instagram.com/joewuthrich/" style="padding-right: 0%">@joewuthrich</a> I may be able give you a month for free.'))
-    return redirect('/')
+    return render_template('premium.html')
 
 
 #   Call the isPremium function through a link
