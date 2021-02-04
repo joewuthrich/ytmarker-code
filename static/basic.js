@@ -1,5 +1,7 @@
 //  JAVASCRIPT FOR SIDE PAGES
 
+var storage = {};
+
 //  When the DOM is ready
 $(document).ready(function () {
 
@@ -8,12 +10,17 @@ $(document).ready(function () {
         trigger: 'hover'
     });
 
+    if (sessionStorage.getItem('video') != null) {
+        storage = JSON.parse(sessionStorage.getItem('video'));
+    }
+
     //  Dark mode on page load if the browser is in dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storage['darkmode'] == 'true') {
         if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
     }
-    else {
+    else
+    {
         if (!document.body.classList.contains("enabled"))
             document.body.classList.add("enabled");
     }
