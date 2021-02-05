@@ -5,6 +5,7 @@
 import uuid
 import json
 import stripe
+import os
 
 from . import config
 from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory, jsonify, render_template_string
@@ -662,7 +663,89 @@ def order_success():
   session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
   customer = stripe.Customer.retrieve(session.customer)
 
-  return render_template_string('<html><body><h1>Thanks for your order, {{customer.name}}!</h1></body></html>')
+  return render_template('success.html')
+
+
+#   Stripe checkout session
+@app.route('/checkout-session', methods=['GET'])
+def get_checkout_session():
+    id = request.args.get('sessionId')
+    checkout_session = stripe.checkout.Session.retrieve(id)
+    return jsonify(checkout_session)
+
+
+#   Stripe customer portal
+@app.route('/customer-portal', methods=['POST'])
+def customer_portal():
+    data = json.loads(request.data)
+    # For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
+    # Typically this is stored alongside the authenticated user in your database.
+    checkout_session_id = data['sessionId']
+    checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+
+    # This is the URL to which the customer will be redirected after they are
+    # done managing their billing with the portal.
+    return_url = os.getenv("DOMAIN")
+
+    session = stripe.billing_portal.Session.create(
+        customer=checkout_session.customer,
+        return_url=return_url)
+    return jsonify({'url': session.url})
+
+
+#   Apply stripe payments
+@app.route('/webhook', methods=['POST'])
+def webhook_received():
+    webhook_secret = {{'STRIPE_WEBHOOK_SECRET'}}
+    request_data = json.loads(request.data)
+
+    if webhook_secret:
+        # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
+        signature = request.headers.get('stripe-signature')
+        try:
+            event = stripe.Webhook.construct_event(
+                payload=request.data, sig_header=signature, secret=webhook_secret)
+            data = event['data']
+        except Exception as e:
+            return e
+        # Get the type of webhook event sent - used to check the status of PaymentIntents.
+        event_type = event['type']
+    else:
+        data = request_data['data']
+        event_type = request_data['type']
+    data_object = data['object']
+
+    if event_type == 'checkout.session.completed':
+    # Payment is successful and the subscription is created.
+    # You should provision the subscription.
+      print(data)
+    elif event_type == 'invoice.paid':
+    # Continue to provision the subscription as payments continue to be made.
+    # Store the status in your database and check when a user accesses your service.
+    # This approach helps you avoid hitting rate limits.
+      print(data)
+    elif event_type == 'invoice.payment_failed':
+    # The payment failed or the customer does not have a valid payment method.
+    # The subscription becomes past_due. Notify your customer and send them to the
+    # customer portal to update their payment information.
+      print(data)
+    else:
+      print('Unhandled event type {}'.format(event_type))
+
+    return jsonify({'status': 'success'})
+
+
+#   Terms & Conditions
+@app.route('/termsandconditions')
+def termsandconditions():
+    return render_template('termsandconditions.html')
+
+
+#   Privacy Policy
+@app.route('/privacypolicy')
+def privacypolicy():
+    return render_template('privacypolicy.html')
+
 
 if __name__ == '__main__':
     app.debug = True

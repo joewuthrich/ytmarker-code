@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}Successful Order{% endblock %}
+{% block desc %}You have successfully upgraded your account to premium.{% endblock %}
+
+{% block scripts %}
+    <script src="/static/basic.js" type="text/javascript"></script>
+    <script src="/static/success.js" defer></script>
+{% endblock %}
+
+{% block main %}
+<div class="mx-auto d-flex-column justify-content-center p-3">
+    <header class="register-back my-auto mx-auto pt-10">
+        <a class="btn btn-secondary" href="/">Back</a>
+    </header>
+
+    </br>
+
+    <form id="manage-billing-form">
+        <button>Manage Billing</button>
+    </form>
+</div>
+{% endblock %}
