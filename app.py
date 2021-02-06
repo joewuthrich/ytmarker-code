@@ -594,7 +594,7 @@ def video(token):
         return render_template('index.html', video=info)
 
 
-#   Premium (temporary)
+#   Return premium template
 @app.route('/premium')
 def premium():
     return render_template('premium.html')
@@ -660,10 +660,10 @@ def create_checkout_session():
 #   Stripe success route
 @app.route('/success', methods=['GET'])
 def order_success():
-  session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
-  customer = stripe.Customer.retrieve(session.customer)
+    session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
+    customer = stripe.Customer.retrieve(session.customer)
 
-  return render_template('success.html')
+    return render_template('success.html')
 
 
 #   Stripe checkout session
@@ -693,6 +693,17 @@ def customer_portal():
     return jsonify({'url': session.url})
 
 
+#   Create customer portal
+@app.route('/create-customer-portal-session', methods=['POST'])
+def customer_portal_session():
+  # Authenticate your user.
+  session = stripe.billing_portal.Session.create(
+    customer='{{ CUSTOMER_ID }}',
+    return_url='https://ytmarker.com',
+  )
+  return redirect(session.url)
+
+
 #   Apply stripe payments
 @app.route('/webhook', methods=['POST'])
 def webhook_received():
@@ -715,20 +726,17 @@ def webhook_received():
         event_type = request_data['type']
     data_object = data['object']
 
+    #   When checkout is completed
     if event_type == 'checkout.session.completed':
-    # Payment is successful and the subscription is created.
-    # You should provision the subscription.
-      print(data)
+        givePremium()
+
+    #   Continue to give premium after invoice is paid
     elif event_type == 'invoice.paid':
-    # Continue to provision the subscription as payments continue to be made.
-    # Store the status in your database and check when a user accesses your service.
-    # This approach helps you avoid hitting rate limits.
-      print(data)
+        givePremium()
+
     elif event_type == 'invoice.payment_failed':
-    # The payment failed or the customer does not have a valid payment method.
-    # The subscription becomes past_due. Notify your customer and send them to the
-    # customer portal to update their payment information.
-      print(data)
+        removePremium()
+        
     else:
       print('Unhandled event type {}'.format(event_type))
 
@@ -745,6 +753,38 @@ def termsandconditions():
 @app.route('/privacypolicy')
 def privacypolicy():
     return render_template('privacypolicy.html')
+
+
+#   Give a user premium
+def givePremium():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+            '_user_id': session['id'],
+            '_premium' : 1
+        }
+
+    query = 'UPDATE users SET premium = %(_premium)s WHERE id = %(_user_id)s'
+
+    cur.execute(query, params)
+    con.commit()
+
+
+#   Remove premium
+def removePremium():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+            '_user_id': session['id'],
+            '_premium' : 0
+        }
+
+    query = 'UPDATE users SET premium = %(_premium)s WHERE id = %(_user_id)s'
+
+    cur.execute(query, params)
+    con.commit()
 
 
 if __name__ == '__main__':
