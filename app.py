@@ -43,6 +43,7 @@ mail.init_app(app)
 s = URLSafeTimedSerializer(config.SECRET_KEY)
 
 stripe.api_key = config.STRIPE_SECRET_KEY
+endpoint_secret = config.ENDPOINT_SECRET
 
 #   Return robots.txt and sitemap.xml
 @app.route('/robots.txt')
@@ -110,12 +111,12 @@ def register():
         cur = con.cursor()
 
         #   Create the tempusers table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, \
-        username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
+        #cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, \
+        #username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
         
         #   Create the users table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) \
-        UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0)')
+        #cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) \
+        #UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0, cus_id VARCHAR(30) NOT NULL)')
 
         params = {
             '_email': email
@@ -629,68 +630,117 @@ def isPremium():
         return False
 
 
-#   Stripe routes
+#   Create a checkout session
 @app.route('/create-checkout-session', methods=['POST'])
 def create_checkout_session():
-    data = json.loads(request.data)
 
+    #   Attempt to create the session, if it fails return an exception
     try:
-        # See https://stripe.com/docs/api/checkout/sessions/create
-        # for additional parameters to pass.
-        # {CHECKOUT_SESSION_ID} is a string literal; do not change it!
-        # the actual Session ID is returned in the query parameter when your customer
-        # is redirected to the success page.
         checkout_session = stripe.checkout.Session.create(
-            success_url="https://ytmarker.com/success?session_id={CHECKOUT_SESSION_ID}",
+            #   Destination upon successful purchace
+            success_url="https://ytmarker.com/success",
+            #   Destination upon cancellation
             cancel_url="https://ytmarker.com/premium",
+            #   How they pay
             payment_method_types=["card"],
+            #   The type of purchace (subscription in  this case)
             mode="subscription",
+            #   The information necessary for this to work
             line_items=[
                 {
-                    "price": data['priceId'],
+                    "price": 'price_1IH4bQG7d9GmhCkUxEwBw2Gm',
                     "quantity": 1
                 }
             ],
+            customer_email=getCusEmail()
         )
+        #   Return the checkout session so it can be loaded
         return jsonify({'sessionId': checkout_session['id']})
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
 
 
-#   Stripe success route
-@app.route('/success', methods=['GET'])
-def order_success():
-    session = stripe.checkout.Session.retrieve(request.args.get('session_id'))
-    customer = stripe.Customer.retrieve(session.customer)
-
-    return render_template('success.html')
-
-
-#   Stripe checkout session
+#   Get the checkout session
 @app.route('/checkout-session', methods=['GET'])
 def get_checkout_session():
+    #   Get the sessionID
     id = request.args.get('sessionId')
     checkout_session = stripe.checkout.Session.retrieve(id)
+
+    #   Return the checkout session
     return jsonify(checkout_session)
 
 
-#   Stripe customer portal
-@app.route('/customer-portal', methods=['POST'])
-def customer_portal():
-    data = json.loads(request.data)
-    # For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
-    # Typically this is stored alongside the authenticated user in your database.
-    checkout_session_id = data['sessionId']
-    checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
+#   Listen and react to stripe webhooks
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    event = None
+    payload = request.data
+    try:
+        event = json.loads(payload)
+    except:
+        return jsonify({'error': {'message': str('Webhook error while parsing basic request')}}), 400
 
-    # This is the URL to which the customer will be redirected after they are
-    # done managing their billing with the portal.
-    return_url = os.getenv("DOMAIN")
+        #   Verify the endpoint secret
+        if endpoint_secret:
+            sig_header = request.headers.get('stripe-signature')
+            try:
+                event = stripe.Webhook.construct_event(
+                    payload, sig_header, endpoint_secret
+                )
+            except stripe.error.SignatureVerificationError as e:
+                print(str(e))
+                return jsonify(success=True)
 
-    session = stripe.billing_portal.Session.create(
-        customer=checkout_session.customer,
-        return_url=return_url)
-    return jsonify({'url': session.url})
+    event_type = event['type']
+    data_object = event['data']['object']
+
+
+    #   When checkout is completed
+    if event_type == 'checkout.session.completed':
+
+        #   Add premium to the account
+        con = mysql.connection
+        cur = con.cursor()
+
+        params = {
+            '_email': data_object['customer_details']['email'],
+            '_cus_id': data_object['customer']
+        }
+
+        query = 'UPDATE users SET cus_id = %(_cus_id)s, premium = 1 WHERE email = %(_email)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+
+    #   If the subscription is cancelled
+    elif event_type == 'customer.subscription.deleted':
+        con = mysql.connection
+        cur = con.cursor()
+
+        params = {
+                '_cus_id': data_object['customer']
+            }
+
+        query = 'UPDATE users SET premium = 0 WHERE cus_id = %(_cus_id)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+        #   Send them an email about deleted subscription
+
+    else:
+      print('Unhandled event type {}'.format(event_type))
+
+    return jsonify(success=True)
+
+
+#   The success template for when the stripe checkout recieves a successful purchace
+@app.route('/success', methods=['GET'])
+def success():
+    flash("Thank you for purchasing premium! Your account should activate shortly, otherwise I can be contacted at joerwuthrich@gmail.com")
+    return redirect('/')
 
 
 #   Create customer portal
@@ -698,49 +748,10 @@ def customer_portal():
 def customer_portal_session():
   # Authenticate your user.
   session = stripe.billing_portal.Session.create(
-    customer='{{ CUSTOMER_ID }}',
+    customer=getCusID(),
     return_url='https://ytmarker.com',
   )
   return redirect(session.url)
-
-
-#   Apply stripe payments
-@app.route('/webhook', methods=['POST'])
-def webhook_received():
-    webhook_secret = {{'STRIPE_WEBHOOK_SECRET'}}
-    request_data = json.loads(request.data)
-
-    if webhook_secret:
-        # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
-        signature = request.headers.get('stripe-signature')
-        try:
-            event = stripe.Webhook.construct_event(
-                payload=request.data, sig_header=signature, secret=webhook_secret)
-            data = event['data']
-        except Exception as e:
-            return e
-        # Get the type of webhook event sent - used to check the status of PaymentIntents.
-        event_type = event['type']
-    else:
-        data = request_data['data']
-        event_type = request_data['type']
-    data_object = data['object']
-
-    #   When checkout is completed
-    if event_type == 'checkout.session.completed':
-        givePremium()
-
-    #   Continue to give premium after invoice is paid
-    elif event_type == 'invoice.paid':
-        givePremium()
-
-    elif event_type == 'invoice.payment_failed':
-        removePremium()
-        
-    else:
-      print('Unhandled event type {}'.format(event_type))
-
-    return jsonify({'status': 'success'})
 
 
 #   Terms & Conditions
@@ -755,36 +766,38 @@ def privacypolicy():
     return render_template('privacypolicy.html')
 
 
-#   Give a user premium
-def givePremium():
+#   Get stripe customer ID
+def getCusID():
     con = mysql.connection
     cur = con.cursor()
 
     params = {
-            '_user_id': session['id'],
-            '_premium' : 1
+            '_user_id': session['id']
         }
 
-    query = 'UPDATE users SET premium = %(_premium)s WHERE id = %(_user_id)s'
+    query = 'SELECT cus_id FROM users WHERE id = %(_user_id)s'
 
     cur.execute(query, params)
-    con.commit()
+    data = cur.fetchall()
+
+    return data[0]['cus_id']
 
 
-#   Remove premium
-def removePremium():
+#   Get customer email
+def getCusEmail():
     con = mysql.connection
     cur = con.cursor()
 
     params = {
-            '_user_id': session['id'],
-            '_premium' : 0
+            '_user_id': session['id']
         }
 
-    query = 'UPDATE users SET premium = %(_premium)s WHERE id = %(_user_id)s'
+    query = 'SELECT email FROM users WHERE id = %(_user_id)s'
 
     cur.execute(query, params)
-    con.commit()
+    data = cur.fetchall()
+
+    return data[0]['email']
 
 
 if __name__ == '__main__':
