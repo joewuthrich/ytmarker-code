@@ -4,9 +4,11 @@
 #   Import things
 import uuid
 import json
+import stripe
+import os
 
 from . import config
-from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory
+from flask import Flask, flash, render_template, session, request, url_for, redirect, Markup, send_from_directory, jsonify, render_template_string
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -40,6 +42,8 @@ mail.init_app(app)
 
 s = URLSafeTimedSerializer(config.SECRET_KEY)
 
+stripe.api_key = config.STRIPE_SECRET_KEY
+endpoint_secret = config.ENDPOINT_SECRET
 
 #   Return robots.txt and sitemap.xml
 @app.route('/robots.txt')
@@ -80,10 +84,6 @@ def register():
             flash("Please input a username")
             return render_template("register.html")
 
-        if len(username) > 20:
-            flash("That email is too long - keep it under 20 characters!")
-            return render_template("register.html")
-
         password = request.form['password']
 
         if not password:
@@ -98,6 +98,14 @@ def register():
             flash("Those passwords do not match!")
             return render_template("register.html")
 
+        if not request.form.get("termsconditions"):
+            flash("You must agree to the terms & conditions and privacy policy!")
+            return render_template("register.html")
+
+        if len(username) > 20:
+            flash("That email is too long - keep it under 20 characters!")
+            return render_template("register.html")
+
         if len(password) > 20:
             flash("That password is too long - keep it under 20 characters!")
             return render_template("register.html")
@@ -107,12 +115,12 @@ def register():
         cur = con.cursor()
 
         #   Create the tempusers table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, \
-        username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
+        #cur.execute('CREATE TABLE IF NOT EXISTS tempusers (email VARCHAR(50) PRIMARY KEY UNIQUE, \
+        #username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL)')
         
         #   Create the users table if it doesn't exist
-        cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) \
-        UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0)')
+        #cur.execute('CREATE TABLE IF NOT EXISTS users (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(50) \
+        #UNIQUE, username VARCHAR(20) UNIQUE NOT NULL, hash VARCHAR(100) NOT NULL, premium BOOLEAN NOT NULL DEFAULT 0, cus_id VARCHAR(30) NOT NULL)')
 
         params = {
             '_email': email
@@ -153,7 +161,7 @@ def register():
         data = cur.fetchall()
 
         if len(data) != 0:
-            flash("There is already an account with that username")
+            flash("You have already been sent an email!")
             return render_template("register.html")
 
         #   Add user to database
@@ -178,12 +186,11 @@ def register():
 
         link = url_for('confirm_email', token=token, _external=True)
 
-        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at \
-        YTMarker.com, please ignore this email.'.format(request.form['username'], link)
+        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at YTMarker.com, please ignore this email.'.format(request.form['username'], link)
 
         #   Send the message
         mail.send(msg)
-        flash('You have been sent a confirmation email')
+        flash('You have been sent a confirmation email!')
         return render_template('register.html')
     else:
         return render_template('register.html')
@@ -192,17 +199,28 @@ def register():
 #   Confirm the email
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
+    #   Open connection
+    con = mysql.connection
+    cur = con.cursor()
 
     #   Check if the signature is expired
     try:
         email = s.loads(token, salt='confirmthe-email', max_age=1200)
     except SignatureExpired:
-        flash('That token is expired!')
-        return redirect('/register')
+        #   Remove email from database
+        email = s.loads(token, salt='confirmthe-email')
 
-    #   Move user into perm database
-    con = mysql.connection
-    cur = con.cursor()
+        params = {
+            '_email': email
+        }
+
+        query = 'DELETE FROM tempusers WHERE email = %(_email)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+        flash('That token is expired, try registering again!')
+        return redirect('/register')
 
     #   Python turns tuple into values that MySQL understands so not as prone to injection
     eparams = {
@@ -591,12 +609,10 @@ def video(token):
         return render_template('index.html', video=info)
 
 
-#   Premium (temporary)
+#   Return premium template
 @app.route('/premium')
 def premium():
-    flash(Markup('You cannot currently upgrade to premium, but if you DM me on Instagram \
-    <a class="time-time" href="https://www.instagram.com/joewuthrich/" style="padding-right: 0%">@joewuthrich</a> I may be able give you a month for free.'))
-    return redirect('/')
+    return render_template('premium.html')
 
 
 #   Call the isPremium function through a link
@@ -626,6 +642,177 @@ def isPremium():
         return True
     else:
         return False
+
+
+#   Create a checkout session
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+
+    #   Attempt to create the session, if it fails return an exception
+    try:
+        checkout_session = stripe.checkout.Session.create(
+            #   Destination upon successful purchace
+            success_url="https://ytmarker.com/success",
+            #   Destination upon cancellation
+            cancel_url="https://ytmarker.com/premium",
+            #   How they pay
+            payment_method_types=["card"],
+            #   The type of purchace (subscription in  this case)
+            mode="subscription",
+            #   The information necessary for this to work
+            line_items=[
+                {
+                    "price": 'price_1IGduWG7d9GmhCkUjm1pl8My',
+                    "quantity": 1
+                }
+            ],
+            customer_email=getCusEmail()
+        )
+        #   Return the checkout session so it can be loaded
+        return jsonify({'sessionId': checkout_session['id']})
+    except Exception as e:
+        return jsonify({'error': {'message': str(e)}}), 400
+
+
+#   Get the checkout session
+@app.route('/checkout-session', methods=['GET'])
+def get_checkout_session():
+    #   Get the sessionID
+    id = request.args.get('sessionId')
+    checkout_session = stripe.checkout.Session.retrieve(id)
+
+    #   Return the checkout session
+    return jsonify(checkout_session)
+
+
+#   Listen and react to stripe webhooks
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    event = None
+    payload = request.data
+    try:
+        event = json.loads(payload)
+    except:
+        return jsonify({'error': {'message': str('Webhook error while parsing basic request')}}), 400
+
+        #   Verify the endpoint secret
+        if endpoint_secret:
+            sig_header = request.headers.get('stripe-signature')
+            try:
+                event = stripe.Webhook.construct_event(
+                    payload, sig_header, endpoint_secret
+                )
+            except stripe.error.SignatureVerificationError as e:
+                print(str(e))
+                return jsonify(success=True)
+
+    event_type = event['type']
+    data_object = event['data']['object']
+
+
+    #   When checkout is completed
+    if event_type == 'checkout.session.completed':
+
+        #   Add premium to the account
+        con = mysql.connection
+        cur = con.cursor()
+
+        params = {
+            '_email': data_object['customer_details']['email'],
+            '_cus_id': data_object['customer']
+        }
+
+        query = 'UPDATE users SET cus_id = %(_cus_id)s, premium = 1 WHERE email = %(_email)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+
+    #   If the subscription is cancelled
+    elif event_type == 'customer.subscription.deleted':
+        con = mysql.connection
+        cur = con.cursor()
+
+        params = {
+                '_cus_id': data_object['customer']
+            }
+
+        query = 'UPDATE users SET premium = 0 WHERE cus_id = %(_cus_id)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+        #   Send them an email about deleted subscription
+
+    else:
+      print('Unhandled event type {}'.format(event_type))
+
+    return jsonify(success=True)
+
+
+#   The success template for when the stripe checkout recieves a successful purchace
+@app.route('/success', methods=['GET'])
+def success():
+    flash("Thank you for purchasing premium! Your account should activate shortly, otherwise I can be contacted at joerwuthrich@gmail.com")
+    return redirect('/')
+
+
+#   Create customer portal
+@app.route('/create-customer-portal-session', methods=['POST'])
+def customer_portal_session():
+  # Authenticate your user.
+  session = stripe.billing_portal.Session.create(
+    customer=getCusID(),
+    return_url='https://ytmarker.com',
+  )
+  return redirect(session.url)
+
+
+#   Terms & Conditions
+@app.route('/termsandconditions')
+def termsandconditions():
+    return render_template('termsandconditions.html')
+
+
+#   Privacy Policy
+@app.route('/privacypolicy')
+def privacypolicy():
+    return render_template('privacypolicy.html')
+
+
+#   Get stripe customer ID
+def getCusID():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+            '_user_id': session['id']
+        }
+
+    query = 'SELECT cus_id FROM users WHERE id = %(_user_id)s'
+
+    cur.execute(query, params)
+    data = cur.fetchall()
+
+    return data[0]['cus_id']
+
+
+#   Get customer email
+def getCusEmail():
+    con = mysql.connection
+    cur = con.cursor()
+
+    params = {
+            '_user_id': session['id']
+        }
+
+    query = 'SELECT email FROM users WHERE id = %(_user_id)s'
+
+    cur.execute(query, params)
+    data = cur.fetchall()
+
+    return data[0]['email']
+
 
 if __name__ == '__main__':
     app.debug = True

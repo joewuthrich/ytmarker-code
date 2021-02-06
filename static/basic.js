@@ -15,7 +15,7 @@ $(document).ready(function () {
     }
 
     //  Dark mode on page load if the browser is in dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storage['darkmode'] == 'true') {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && (storage['darkmode'] == 'true' || storage['darkmode'] == undefined)) {
         if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
     }
