@@ -84,10 +84,6 @@ def register():
             flash("Please input a username")
             return render_template("register.html")
 
-        if len(username) > 20:
-            flash("That email is too long - keep it under 20 characters!")
-            return render_template("register.html")
-
         password = request.form['password']
 
         if not password:
@@ -100,6 +96,14 @@ def register():
 
         if request.form['password'] != request.form['confirm_password']:
             flash("Those passwords do not match!")
+            return render_template("register.html")
+
+        if not request.form.get("termsconditions"):
+            flash("You must agree to the terms & conditions and privacy policy!")
+            return render_template("register.html")
+
+        if len(username) > 20:
+            flash("That email is too long - keep it under 20 characters!")
             return render_template("register.html")
 
         if len(password) > 20:
@@ -157,7 +161,7 @@ def register():
         data = cur.fetchall()
 
         if len(data) != 0:
-            flash("There is already an account with that username")
+            flash("You have already been sent an email!")
             return render_template("register.html")
 
         #   Add user to database
@@ -182,12 +186,11 @@ def register():
 
         link = url_for('confirm_email', token=token, _external=True)
 
-        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at \
-        YTMarker.com, please ignore this email.'.format(request.form['username'], link)
+        msg.body = 'Please confirm your email, {}.\r\n\r\n{}\r\n\r\nIf you did not register for an account at YTMarker.com, please ignore this email.'.format(request.form['username'], link)
 
         #   Send the message
         mail.send(msg)
-        flash('You have been sent a confirmation email')
+        flash('You have been sent a confirmation email!')
         return render_template('register.html')
     else:
         return render_template('register.html')
@@ -196,17 +199,28 @@ def register():
 #   Confirm the email
 @app.route('/confirm_email/<token>')
 def confirm_email(token):
+    #   Open connection
+    con = mysql.connection
+    cur = con.cursor()
 
     #   Check if the signature is expired
     try:
         email = s.loads(token, salt='confirmthe-email', max_age=1200)
     except SignatureExpired:
-        flash('That token is expired!')
-        return redirect('/register')
+        #   Remove email from database
+        email = s.loads(token, salt='confirmthe-email')
 
-    #   Move user into perm database
-    con = mysql.connection
-    cur = con.cursor()
+        params = {
+            '_email': email
+        }
+
+        query = 'DELETE FROM tempusers WHERE email = %(_email)s'
+
+        cur.execute(query, params)
+        con.commit()
+
+        flash('That token is expired, try registering again!')
+        return redirect('/register')
 
     #   Python turns tuple into values that MySQL understands so not as prone to injection
     eparams = {
@@ -648,7 +662,7 @@ def create_checkout_session():
             #   The information necessary for this to work
             line_items=[
                 {
-                    "price": 'price_1IH4bQG7d9GmhCkUxEwBw2Gm',
+                    "price": 'price_1IGduWG7d9GmhCkUjm1pl8My',
                     "quantity": 1
                 }
             ],

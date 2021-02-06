@@ -1,4 +1,4 @@
-var stripe = Stripe('pk_test_51IGdVQG7d9GmhCkUKdEG16P1KvtQbckzO7FLQMLJakIDyt96duM2tGva0UslkQB9EdT0ElAq4DdezqkQir57YsHL00P5vVDwRI');
+var stripe = Stripe('pk_live_51IGdVQG7d9GmhCkU01KhVSUcaOZjWNoeAhGSApx2dDx83WfGuzt27aetEpyIEbdFqDok4wB2NkzjOsF12l5UtXzk00ZgEk2M4v');
 
 var createCheckoutSession = function(priceId) {
     return fetch("/create-checkout-session", {
