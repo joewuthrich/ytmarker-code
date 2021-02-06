@@ -3,12 +3,6 @@ var stripe = Stripe('pk_test_51IGdVQG7d9GmhCkUKdEG16P1KvtQbckzO7FLQMLJakIDyt96du
 var createCheckoutSession = function(priceId) {
     return fetch("/create-checkout-session", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        priceId: priceId
-      })
     }).then(function(result) {
       return result.json();
     });
