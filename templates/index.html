@@ -145,8 +145,7 @@
                                 <div class="px-3 py-1">
                                     <a class="dropdown-item" href="/saved">Saved videos</a>
                                     <div class="dropdown-divider"></div>
-                                    {% if not premium %}<a class="dropdown-item" href="/premium"><span style="color: gold">Upgrade to Premium</span></a>
-                                    {% else %}<form method="POST" action="/create-customer-portal-session"><button type="submit" class="dropdown-item">Manage account</button></form>{% endif %}
+                                    {% if not premium %}<a class="dropdown-item" href="/premium"><span style="color: gold">Upgrade to Premium</span></a>{% endif %}
                                     <a class="dropdown-item" href="/logout">Log Out</a>
                                 </div>
                             </div>
@@ -214,8 +213,10 @@
             <div id="player"></div>
 
             <div id="yt-cover"></div>
-            
-            <a class="btn btn-warning pointer-hover" href="#">Tutorial</a>
+
+            <div class="search-box video-input">
+                <a class="btn btn-secondary pointer-hover video-input" href="/video/22e2f56e-bc">Tutorial</a>
+            </div>
         </div>
 
         <div class="mx-auto time-container">

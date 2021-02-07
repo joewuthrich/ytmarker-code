@@ -22,10 +22,10 @@ var storage = {
         "focus-time-setting": "true",
         "key-list-current-setting": 'KeyZ'
     },
-    darkmode: 'true',
     footer: 'true'
 };
 
+var darkmode = 'none';
 
 //  When the DOM is ready
 $(document).ready(function () {
@@ -41,12 +41,27 @@ $(document).ready(function () {
     }
     
     syncStorage();
-
+    
+    //  Get rid of footer
     if (storage['footer'] == 'false')
         $('.footer').attr("style", "display:none !important;") 
 
+    //  Setup light or dark mode through localstorage
+    if (localStorage.getItem('darkmode') != null) {
+        darkmode = localStorage.getItem('darkmode');
+    }
+
+    if (darkmode == 'none') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            darkmode = 'true';
+        else
+            darkmode = 'false'
+
+        localStorage.setItem('darkmode', darkmode);
+    }
+
     //  Dark mode on page load if the browser is in dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && storage['darkmode'] == 'true') {
+    if (darkmode == 'true') {
         if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
     }
@@ -300,7 +315,7 @@ function addTime(isDelayed = false, name = '', list = currentList, loading = fal
         $('.' + list + "-named-list").trigger("click");
 
     //  Insert the element HTML into the document
-    document.getElementById(list + '-named-list').insertRow(0).innerHTML = `
+    document.getElementById(list + '-named-list').insertRow().innerHTML = `
     <tr>
         <div class="time-element">
             <a class="time-time" href="#" onClick="seekTo(` + time + `)">` + formattedTime + `</a>
@@ -311,7 +326,7 @@ function addTime(isDelayed = false, name = '', list = currentList, loading = fal
 
     //  If you've just added a time to the current list with the button, auto-focus the list's name
     if (!loading && storage['settings']['focus-time-setting'] == 'true') {
-        $('.time-name:visible').eq(0).focus();
+        $('.time-name:visible').eq(-1).focus();
     }
 }
 
@@ -325,8 +340,7 @@ $(document).on('click', '.time-delete', function () {
 
     // Remove the time from the storage
     var body = storage['lists'][row.closest('tbody').attr('id').slice(0, -11)];
-    var length = body.length;
-    body.splice((length - 1) - index, 1);
+    body.splice(index, 1);
     syncStorage();
 
     //  Remove the time element from the DOM
@@ -338,13 +352,8 @@ $(document).on('click', '.time-delete', function () {
 $('#current-name').on('focusout', function () {
     var input = $(this).val();
 
-    if (player.getVideoData()['video_id'] === undefined) {
-        $(this).val("List Name");
-        return;
-    }
-
     //  If the input is blank or doesn't already exist or contains the special ID character
-    if (input == '' || $('#' + createValidID(input)).length || input.indexOf('⛕') > -1) {
+    if (input == '' || $('#' + createValidID(input) + '-named-list').length || input.indexOf('⛕') > -1) {
 
         //  Set the input back to what it was before
         $(this).val(getNameFromID(oldInput));
@@ -427,8 +436,8 @@ $(document).on('focusout', '.time-name', function() {
     var body = storage['lists'][row.closest('tbody').attr('id').slice(0, -11)];
     var length = body.length;
 
-    //  Set the name in storage and sync it
-    body[(length - 1) - index]["name"] = $(this).val();
+    //  Set the name in storage and sync it (add [(length - 1) -] to reverse it)
+    body[index]["name"] = $(this).val();
     syncStorage();
 });
 
@@ -462,7 +471,7 @@ $(document).on('focusout', '#delayed-setting', function() {
 //  Register keyboard input for adding lists
 $(document).keypress(function (event) {
     //  If the person is focused in an input or select box or the key dropdown menu OR the model is open OR they're hovering over the key list dropdown
-    if ($(event.target).closest("input, select, .all-key-dropdown-menu")[0] || document.getElementById('confirmation-modal').style.display != "" || $(".all-key-dropdown-menu").is(":hover"))
+    if ($(event.target).closest("input, select, .all-key-dropdown-menu")[0] || document.getElementById('confirmation-modal').style.display != "" || $(".all-key-dropdown-menu:hover").length > 0)
         return;
 
     //  If the video doesn't exist
@@ -716,6 +725,13 @@ function deleteOldVideo(blank = false) {
     //  Set the currentList to nothing
     currentList = ""
 
+    //  Blank out the key setting values
+    if ($('#KeyZ-key-setting').length > 0) {
+        $('#KeyZ-key-setting').val('');
+        $('#KeyX-key-setting').val('');
+        $('#KeyC-key-setting').val('');
+    }
+
     //  Reset variables
     storage['video'] = {};
     storage['lists'] = {};
@@ -732,7 +748,7 @@ function deleteOldVideo(blank = false) {
 
 //  Generate a the lists in a text format for copying and pasting
 function generateList() {
-    var text = "";
+    var text = "( Made using YTMarker.com )\n\n";
 
     //  For each list in the list of lists
     for (var key in storage['lists']) {
@@ -750,9 +766,6 @@ function generateList() {
             text += '\t' + formattedTime + "  :  " + storage['lists'][key][i]["name"] + '\n';
         }
     }
-
-    //  Add a tag 
-    text += "\nMade Using YTMarker.com"
 
     //  Create an object to copy
     var elem = document.createElement("textarea");

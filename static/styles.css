@@ -394,6 +394,7 @@ input[type=number] {
   animation-name: animatetop;
   animation-duration: 0.4s;
   border: none;
+  border-radius: 0 !important;
 }
 
 @-webkit-keyframes animatetop {

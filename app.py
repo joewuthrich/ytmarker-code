@@ -598,13 +598,16 @@ def video(token):
 
     if len(data) != 1:
         flash("That video doesn't exist")
-        return render_template('index.html', session=session) 
+        if session:
+            return render_template('index.html', session=session, premium=isPremium()) 
+        else:
+            return render_template('index.html')
 
     #   Load the video info into readable format
     info = json.loads(data[0]['info'])
 
     if session:
-        return render_template('index.html', video=info, session=session)
+        return render_template('index.html', video=info, session=session, premium=isPremium())
     else:
         return render_template('index.html', video=info)
 

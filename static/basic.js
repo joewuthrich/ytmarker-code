@@ -1,6 +1,6 @@
 //  JAVASCRIPT FOR SIDE PAGES
 
-var storage = {};
+var darkmode = 'none';
 
 //  When the DOM is ready
 $(document).ready(function () {
@@ -10,12 +10,21 @@ $(document).ready(function () {
         trigger: 'hover'
     });
 
-    if (sessionStorage.getItem('video') != null) {
-        storage = JSON.parse(sessionStorage.getItem('video'));
+    //  Setup light or dark mode through localstorage
+    if (localStorage.getItem('darkmode') != null) {
+        darkmode = localStorage.getItem('darkmode');
     }
 
-    //  Dark mode on page load if the browser is in dark mode
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && (storage['darkmode'] == 'true' || storage['darkmode'] == undefined)) {
+    if (darkmode == 'none') {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+            darkmode = 'true';
+        else
+            darkmode = 'false'
+
+        localStorage.setItem('darkmode', darkmode);
+    }
+
+    if (darkmode == 'true') {
         if (document.body.classList.contains("enabled"))
             document.body.classList.remove("enabled");
     }
