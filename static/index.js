@@ -39,6 +39,8 @@ $(document).ready(function () {
     if (sessionStorage.getItem('video') != null) {
         storage = JSON.parse(sessionStorage.getItem('video'));
     }
+    
+    syncStorage();
 
     if (storage['footer'] == 'false')
         $('.footer').attr("style", "display:none !important;") 
